@@ -1,8 +1,16 @@
+#!/usr/bin/env python
 import argparse
 from Bio.Seq import Seq
 from Bio.SeqUtils import MeltingTemp as mt, GC123
 import csv
 import os
+
+__author__ = 'Gabryelle Agoutin - INRAE'
+__copyright__ = 'Copyright (C) 2024 INRAE'
+__license__ = 'GNU General Public License'
+__version__ = '1.0'
+__email__ = 'gabryelle.agoutin@inrae.fr'
+__status__ = 'prod'
 
 def validate_file_exists(file_path):
     '''Function to validate if a file exists'''
@@ -199,23 +207,26 @@ def main():
 
 Columns in the output file:
     - $1 OG_ID: ID of the Orthologous Group
-    - $2 SpeciesCount: Number of different species in this OG
-    - $3 PercentSingleCopy : Percentage of proteins that are single-copy in the OG
-    - $4 Gene_name
-    - $5 Primer: DNA sequence of the primer
-    - $6 Position 
-    - $7 Primer_Size: Size of the primer
-    - $8 Number_matching: Number of sequences matching this primer
-    - $9 Degenerescence: Degeneracy of the primer
-    - $10 Tm_max: 2*(A+T)+4*(G+C) with max of GC
-    - $11 Tm_min: 2*(A+T)+4*(G+C) with max of AT
-    - $12 GC_percentage_fraction: Fractional GC content of the primer with degeneracy
-    - $13 GC_percentage_max: Maximum GC content of the primer
-    - $14 GC_percentage_min: Minimum GC content of the primer
-    - $15 GC_in_last_thirty_percent: Number of GC bases in the last thirty percent base of the primer.To check GC content at the end of the primer
-    - $16 Ends_with_T: Whether the primer ends with 'T'
-    - $17 Self_Complementarity: Whether the primer is self-complementary
-    - $18 GC_clamp: Whether the primer has a single GC clamp""", formatter_class=argparse.RawTextHelpFormatter,
+    - $2 NumberOfSeq: Total number of sequences in the fasta file
+    - $3 SpeciesCount: Number of different species in this OG
+    - $4 PercentSingleCopy : Percentage of proteins that are single-copy in the OG
+    - $5 Gene_name
+    - $6 Primer: DNA sequence of the primer
+    - $7 Position : primer position on sequence alignment
+    - $8 Primer_Size: Size of the primer
+    - $9 Number_matching: Number of sequences matching this primer
+    - $10 Percentage_NM : Percentage. Number of sequences caught by the primer as a function of the total number of sequences
+    - $11 Score_Percentage_NM : Score calculated as the difference between the percentage observed and a predefined threshold. 
+    - $12 Degenerescence: Degeneracy of the primer
+    - $13 Tm_max: 2*(A+T)+4*(G+C) with max of GC
+    - $14 Tm_min: 2*(A+T)+4*(G+C) with max of AT
+    - $15 GC_percentage_fraction: Fractional GC content of the primer with degeneracy
+    - $16 GC_percentage_max: Maximum GC content of the primer
+    - $17 GC_percentage_min: Minimum GC content of the primer
+    - $18 GC_in_last_thirty_percent: Number of GC bases in the last thirty percent base of the primer.To check GC content at the end of the primer
+    - $19 Ends_with_T: Whether the primer ends with 'T'
+    - $20 Self_Complementarity: Whether the primer is self-complementary
+    - $21 GC_clamp: Whether the primer has a single GC clamp""", formatter_class=argparse.RawTextHelpFormatter,
     epilog="Exemple: python process_primers_stat.py -i degeprime_result/concatenated_* -og ../2_search_taxid_and_monocopy_calculation/OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 70 -tm_min 50")
     parser.add_argument("-i", "--input_files", nargs='+', help="Paths to the input TSV files")
     parser.add_argument("-og", "--og_file", help="Path to the OG information file")

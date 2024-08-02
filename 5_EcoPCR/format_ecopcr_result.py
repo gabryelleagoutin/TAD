@@ -16,19 +16,7 @@ from collections import defaultdict
 from Bio.Seq import Seq
 from subprocess import run
 
-def parse_arguments():
-    """Parse script arguments."""
-    parser = ArgumentParser(description="Process EcoPCR output and annotate with taxonomy",
-                            formatter_class=ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("ecopcr_files", type=str, nargs='+', help="EcoPCR output files")
-    parser.add_argument('--add_primer_sequences', help="Add primer sequences to amplicon sequences", action="store_true")
-    parser.add_argument("-o", '--output_dir', help="Output directory", type=str, default='./')
-    parser.add_argument("-t", '--taxonomy_file', help="Taxonomy file", type=str, required=True)
-    parser.add_argument("-v", "--verbose", help="Increase output verbosity", action="store_true")
-    
-    args = parser.parse_args()
-    return args
 
 def get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
     """Get amplicon sequences from an ecopcr file."""
@@ -106,7 +94,16 @@ def replace_fasta_headers_and_check_sequences(fasta_file, taxonomy_dict, output_
                 fout.write(f"{seq_str}\n")
 
 def main():
-    args = parse_arguments()
+    parser = ArgumentParser(description="Process EcoPCR output and annotate with taxonomy",
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument("ecopcr_files", type=str, nargs='+', help="EcoPCR output files")
+    parser.add_argument('--add_primer_sequences', help="Add primer sequences to amplicon sequences", action="store_true")
+    parser.add_argument("-o", '--output_dir', help="Output directory", type=str, default='./')
+    parser.add_argument("-t", '--taxonomy_file', help="Taxonomy file", type=str, required=True)
+    parser.add_argument("-v", "--verbose", help="Increase output verbosity", action="store_true")
+    
+    args = parser.parse_args()
 
     if args.verbose:
         logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)

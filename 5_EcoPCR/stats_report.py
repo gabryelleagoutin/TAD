@@ -142,7 +142,6 @@ def calculate_statistics(filtered_clusters, output_stats_file):
             f.write("\n")
 
 def main():
-    # Argument parser
     parser = argparse.ArgumentParser(description="Filter lines within clusters based on taxonomy, generate corrected clusters and statistics.",
        epilog="python stats_report.py -c cluster.txt -t all_modified.fna -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina -l rejected_clusters.txt -r cluster_corrected.txt")
     parser.add_argument("-c", "--cluster_file", type=str, required=True, help="Input file containing cluster information (e.g., cluster.txt).")

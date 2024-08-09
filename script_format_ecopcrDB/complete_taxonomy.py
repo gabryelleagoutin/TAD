@@ -40,3 +40,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.name_seq_file, args.taxo_file, args.output_file)
+

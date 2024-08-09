@@ -53,3 +53,4 @@ awk '{if (NF > 1 && $2 != "") print $0}' name_seq.taxo | sed 's/ /_/g' > filtere
 
 ## Launch script to add the taxo to the sequence name
 python complete_taxonomy.py name_seq_without_taxo.txt filtered_name_seq.taxo name_seq_with_taxo.txt
+

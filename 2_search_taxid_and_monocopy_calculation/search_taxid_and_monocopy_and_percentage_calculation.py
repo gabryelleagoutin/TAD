@@ -172,7 +172,7 @@ def main():
     - 'SpeciesCount': Number of unique species in the OG\
     - 'nb_single_copy': Number of proteins present as a single copy in at least one species\
     - 'percent_single_copy': Percentage of proteins that are single-copy in the OG\
-    - 'ProteinID': ID of a representative protein in the OG\
+    - 'ProteinID': List of all protein IDs. Protein IDs are made up of a number followed by ‘:’ followed by the taxid.\
     - 'taxids': List of taxonomy IDs corresponding to the species in the OG\
     - 'species': List of species names corresponding to the taxonomy IDs\
     - 'TargetSpecies_Count': Number of target species in the OG\

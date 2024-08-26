@@ -114,7 +114,7 @@ for files in alignment/*.fa; do
 done
 
 ```
-### c. Génération de toutes les amorces possibles
+### d. Génération de toutes les amorces possibles
 
 Generation of all possible primers
 
@@ -165,7 +165,7 @@ echo sarray -J degeprime -o slurm_array_out/%j_%x.out $s_array_file
 
 NB: Degeneracy is the total number of possible combinations of nucleotides that a degenerate primer can form. For example, for the ATCS primer, where S represents G or C, the possible combinations are ATCG and ATCC. The degeneracy is therefore equal to 2. Possible degeneracy values are 2, 4, 8, 16, 32, 64, 96, etc. Higher values are possible, but a degeneracy of 96 is already extremely unstringent.
 
-### d. Concaténation des résultats
+### e. Concaténation des résultats
 
 We concatenate the results to obtain one file per OGs
 
@@ -192,7 +192,7 @@ for prefix in $prefixes; do
     fi
 done
 ```
-### e. Adding metrics to primers
+### f. Adding metrics to primers
 
 We run a program to add metrics to the primers. 
 
@@ -207,7 +207,7 @@ We will obtain a TSV file containing the primers matching our criteria, with the
 python process_primers_stat.py -i degeprime_result/concatenated_* -og ../3_fasta_recovery/updated_OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 65 -tm_min 54
 ```
 
-### f. Création du tableau des couples de primers.
+### g. Création du tableau des couples de primers.
 
 Creation of a table of pairs of primers.
 
@@ -224,7 +224,7 @@ sarray --meme=200G tab_couple.sarray
 Each pair of primers will be given a total score, calculated by adding the scores for number matching and amplicon size. These parameters were deemed to be the most important after selection based on temperature and amplicon size.
 
 
-### g. Concaténation des résultats et séléction des meilleurs couples.
+### h. Concaténation des résultats et séléction des meilleurs couples.
 
 Concatenate the results and select the best pairs.
 

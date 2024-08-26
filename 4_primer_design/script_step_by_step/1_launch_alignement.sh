@@ -9,9 +9,9 @@ module load bioinfo/ClustalOmega/1.2.4
 
 mkdir -p alignment/
 
-for fichier in ../3_fasta_recovery/*.fa; do
-    nom_fichier=$(basename "$fichier")
-    clustalo -i "$fichier" -o "alignment/$nom_fichier" --threads=4
+for files in ../3_fasta_recovery/*.fa; do
+    file_name=$(basename "$fichier")
+    clustalo -i "$files" -o "alignment/$file_name" --threads=4
 done
 
 

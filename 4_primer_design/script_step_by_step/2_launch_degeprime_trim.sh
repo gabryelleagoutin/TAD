@@ -5,7 +5,7 @@
 #SBATCH -c 3
 #SBATCH --mail-type=BEGIN,END,FAIL
 
-for fichier in alignment/*.fa; do
-    nom_fichier=$(basename "$fichier" .fa)
-    perl DEGEPRIME/TrimAlignment.pl -i "$fichier" -min 0.9 -o "alignment/trimmed_$nom_fichier.fna"
+for files in alignment/*.fa; do
+    file_name=$(basename "$fichier" .fa)
+    perl DEGEPRIME/TrimAlignment.pl -i "$files" -min 0.9 -o "alignment/trimmed_$file_name.fna"
 done

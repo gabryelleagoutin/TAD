@@ -2,12 +2,12 @@
 
 s_array_file='degeprime_multiple_params.sarray'
 
-fasta_files='alignment/*.fa'  # Spécifiez le chemin complet vers votre répertoire contenant les fichiers fasta
+fasta_files='alignment/*.fa' 
 result_dir='degeprime_result/'
 aln_dir='alignment/'
 
 degeneracies='8 12 24 48 96'
-lengths='14 15 16 17 18'
+lengths='14 15 16 17 18 19 20 21 22 23 24'
 
 echo '#' $fasta_files > $s_array_file
 echo '# degeneracies' $degeneracies >> $s_array_file

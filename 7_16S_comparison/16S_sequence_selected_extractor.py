@@ -1,6 +1,17 @@
+#!/usr/bin/env python
+
 import argparse
 import pandas as pd
 import logging
+
+__author__ = 'Gabryelle Agoutin - INRAE'
+__copyright__ = 'Copyright (C) 2024 INRAE'
+__license__ = 'GNU General Public License'
+__version__ = '1.0'
+__email__ = 'gabryelle.agoutin@inrae.fr'
+__status__ = 'prod'
+
+
 
 def setup_logging(log_file):
     """

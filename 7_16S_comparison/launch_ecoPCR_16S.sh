@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J launch_format_ecoPCR_result
+#SBATCH -J launch_ecoPCR_16S.sh
 #SBATCH -p unlimitq
 #SBATCH --mem=50G
 #SBATCH -c 3

@@ -1,12 +1,12 @@
 #!/bin/bash
 s_array_file='ecopcr_commands.sarray'
 
-ecopcr_assembly_dir='/home/gagoutin/work/BD_ecoPCR/ecoPCR_db/assemblies/*.adx'
+ecopcr_assembly_dir='/PATH/BD_ecoPCR/ecoPCR_db/assemblies/*.adx'
 
 ecopcr_outdir='primers'
-COG='58151at1578'
-amorce_f='AAYATGGGKGTBGGNGAYG'
-amorce_r='TTCWGGGAARAYBARYTGT'
+COG='[COG_name]'
+amorce_f='[forward_primer]'
+amorce_r='[reverse_primer]'
 
 
 for assembly in $ecopcr_assembly_dir

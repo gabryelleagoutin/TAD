@@ -11,7 +11,7 @@ TaxonMarker is a tool developed in Python and Bash, designed to identify genetic
 git clone https://github.com/GTG1988A/TaxonMarker.git
 ```
 
-![image](https://github.com/user-attachments/assets/fbf541d5-28cf-40f7-b585-dbe17e4ce7b3)
+![image](https://github.com/user-attachments/assets/98671ab0-6f26-4bcc-b9c9-e3a1f0d6abe1)
 
 ## 1. formatting file bacterian OG
 

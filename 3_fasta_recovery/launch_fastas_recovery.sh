@@ -7,4 +7,4 @@
 
 module load devel/python/Python-3.11.1 
 
-python fasta_recovery_new.py ../2_search_taxid_and_monocopy_calculation/OG_selected_[TAXID].tab
+python fasta_recovery.py ../2_search_taxid_and_monocopy_calculation/OG_[TAXID]_selected.tab

@@ -11,8 +11,6 @@ TaxonMarker is a tool developed in Python and Bash, designed to identify genetic
 git clone https://github.com/GTG1988A/TaxonMarker.git
 ```
 
-![image](https://github.com/user-attachments/assets/98671ab0-6f26-4bcc-b9c9-e3a1f0d6abe1)
-
 ## 1. formatting file bacterian OG
 
 This step must only be performed by the programmer, each time OrthoDB is updated. It allows only bacterial ortholog groups to be retrieved from the OrthoDB database.
@@ -81,8 +79,6 @@ python fastas_recovery.py ../2_search_taxid_and_monocopy_calculation/OG_1578_sel
 
 The script also adds the number of sequences contained in the OG fasta to the table.
 
-![image](https://github.com/user-attachments/assets/7fb3fb26-88d1-4613-b0d9-66b2ebf37acf)
-
 ## 4. primer design
 
 This step contains several of them:
@@ -114,7 +110,7 @@ for files in alignment/*.fa; do
 done
 
 ```
-### d. Génération de toutes les amorces possibles
+### c. Génération de toutes les amorces possibles
 
 Generation of all possible primers
 
@@ -165,7 +161,7 @@ echo sarray -J degeprime -o slurm_array_out/%j_%x.out $s_array_file
 
 NB: Degeneracy is the total number of possible combinations of nucleotides that a degenerate primer can form. For example, for the ATCS primer, where S represents G or C, the possible combinations are ATCG and ATCC. The degeneracy is therefore equal to 2. Possible degeneracy values are 2, 4, 8, 16, 32, 64, 96, etc. Higher values are possible, but a degeneracy of 96 is already extremely unstringent.
 
-### e. Concaténation des résultats
+### d. Concaténation des résultats
 
 We concatenate the results to obtain one file per OGs
 
@@ -192,7 +188,7 @@ for prefix in $prefixes; do
     fi
 done
 ```
-### f. Adding metrics to primers
+### e. Adding metrics to primers
 
 We run a program to add metrics to the primers. 
 
@@ -207,7 +203,7 @@ We will obtain a TSV file containing the primers matching our criteria, with the
 python process_primers_stat.py -i degeprime_result/concatenated_* -og ../3_fasta_recovery/updated_OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 65 -tm_min 54
 ```
 
-### g. Création du tableau des couples de primers.
+### f. Création du tableau des couples de primers.
 
 Creation of a table of pairs of primers.
 
@@ -224,7 +220,7 @@ sarray --meme=200G tab_couple.sarray
 Each pair of primers will be given a total score, calculated by adding the scores for number matching and amplicon size. These parameters were deemed to be the most important after selection based on temperature and amplicon size.
 
 
-### h. Concaténation des résultats et séléction des meilleurs couples.
+### g. Concaténation des résultats et séléction des meilleurs couples.
 
 Concatenate the results and select the best pairs.
 
@@ -317,6 +313,9 @@ We use clustering with the Swarm tool to measure species discrimination. Swarm i
 ```bash!
 python /PATH/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
 ```
+The output will be the file that swarm produces (ex:fichier_swarm.txt) and the file that formats swarm's results (ex:cluster.txt).
+
+the format file provides all the taxonomic information for each cluster. 
 
 #### 3_launch_stat_swarm.sh
 
@@ -342,7 +341,7 @@ g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__De
 So we run our script again with the exclusion of these words
 
 ```bash=
-python stats_report_taxo2.py -c cluster.txt -t all_modified.fna -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina -l rejected_clusters.txt -r cluster_corrected.txt
+python stats_report_taxo2.py -c cluster.txt  -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina -l rejected_clusters.txt -r cluster_corrected.txt
 
 ```
 
@@ -715,16 +714,16 @@ python complete_taxonomy.py name_seq_without_taxo.txt filtered_name_seq.taxo nam
 
 #### 7. Utilisation 
 
-*Use of name_seq:*
+*Utilisation du name_seq:*
 
-We can select the data we are interested in using the same filter as that applied at the end of TaxonMarker, using the script filter_seq_with_keywords.py. For example, in the case of Lactobacillus, it can be difficult to identify them all because they do not all have an exclusive common trait. They all belong to the Lactobacillaceae family, but it is possible that other genera are also included.
+Nous pouvons sélectionner les données qui nous intéressent en utilisant le même filtre que celui appliqué à la fin de TaxonMarker, à l'aide du script filter_seq_with_keywords.py. Par exemple, pour les Lactobacillus, il peut être difficile de les identifier tous car ils n'ont pas tous un caractère commun exclusif. Ils appartiennent tous à la famille Lactobacillaceae, mais il est possible que d'autres genres en fassent également partie.
 
 
-This file can also be used to add information to a FASTA file. If you only have the sequence identifiers, you can find the corresponding taxonomic information using the name_seq.txt file. This file provides a link between the sequence identifiers and their taxonomic information, making it easier to enrich your FASTA file with the relevant taxonomy data.
+Ce fichier peut également être utilisé pour ajouter des informations à un fichier FASTA. Si vous disposez uniquement des identifiants des séquences, vous pouvez retrouver les informations taxonomiques correspondantes grâce au fichier name_seq.txt. Ce fichier permet de faire le lien entre les identifiants des séquences et leurs informations taxonomiques, facilitant ainsi l'enrichissement de votre fichier FASTA avec les données de taxonomie pertinentes.
 
-*Launch EcoPCR on the database*.
+*Lancement de EcoPCR sur la base*
 
-This is how you launch ecoPCR: 
+on lance ecoPCR comme ça: 
 
 ```bash=
 #!/bin/bash
@@ -746,6 +745,3 @@ for assembly in $ecopcr_assembly_dir
     done
 
 ```
-
-
-

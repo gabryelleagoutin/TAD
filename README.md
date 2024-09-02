@@ -110,7 +110,7 @@ for files in alignment/*.fa; do
 done
 
 ```
-### c. Génération de toutes les amorces possibles
+### c. Generation of all possible primers
 
 Generation of all possible primers
 
@@ -161,7 +161,7 @@ echo sarray -J degeprime -o slurm_array_out/%j_%x.out $s_array_file
 
 NB: Degeneracy is the total number of possible combinations of nucleotides that a degenerate primer can form. For example, for the ATCS primer, where S represents G or C, the possible combinations are ATCG and ATCC. The degeneracy is therefore equal to 2. Possible degeneracy values are 2, 4, 8, 16, 32, 64, 96, etc. Higher values are possible, but a degeneracy of 96 is already extremely unstringent.
 
-### d. Concaténation des résultats
+### d. Concatenation of results
 
 We concatenate the results to obtain one file per OGs
 
@@ -203,9 +203,8 @@ We will obtain a TSV file containing the primers matching our criteria, with the
 python process_primers_stat.py -i degeprime_result/concatenated_* -og ../3_fasta_recovery/updated_OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 65 -tm_min 54
 ```
 
-### f. Création du tableau des couples de primers.
+### f. Creation of a table of pairs of primers.
 
-Creation of a table of pairs of primers.
 
 We run a program to generate the possible pairs of primers. We specify the minimum and maximum amplicon size between the two primers. Pairs that do not meet these criteria will be deleted. In addition, pairs with a temperature difference of more than 5 degrees between the primer forward and the primer reverse will also be eliminated.
 
@@ -220,9 +219,7 @@ sarray --meme=200G tab_couple.sarray
 Each pair of primers will be given a total score, calculated by adding the scores for number matching and amplicon size. These parameters were deemed to be the most important after selection based on temperature and amplicon size.
 
 
-### g. Concaténation des résultats et séléction des meilleurs couples.
-
-Concatenate the results and select the best pairs.
+### g.Concatenate the results and select the best pairs.
 
 We concatenate the results using concatenate_sort_result.sh and select the pairs we are interested in.
 
@@ -398,7 +395,7 @@ This will allow us to search these genomes for those that have a 16S sequence. I
 For example, for Lactobacillus, we would run the search on our microbial database using the following criteria:
 
 ```bash=
-python filter_seq_with_keywords.py -s /home/gagoutin/work/BD_TaxonMarker/BD_ecoPCR/name_seq_with_taxo.txt -o filtered_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina
+python filter_seq_with_keywords.py -s /PATH/BD_TaxonMarker/BD_ecoPCR/name_seq_with_taxo.txt -o filtered_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina
 ```
 
 
@@ -454,7 +451,7 @@ python script_treatment_ecopcr_result/format_ecopcr_result.py -o . -t name_seq_1
 
 #### 2_launch_swarm.sh
 ```bash!
-python /home/gagoutin/work/Lactobacillus/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
+python /PATH/Lactobacillus/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
 ```
 
 ### 3_launch_stat_swarm_16S.sh
@@ -540,12 +537,12 @@ genome_files_with_taxid.txt contains the path to the genome file name, plus the 
 
 ```bash=
 # $ head genome_files_with_taxid.txt
-/home/gagoutin/work/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415/GCA_018630415.1_ASM1863041v1_genomic.fna.gz GCA_018630415.1 1280
-/home/gagoutin/work/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395/GCA_018630395.1_ASM1863039v1_genomic.fna.gz GCA_018630395.1 1280
+/PATH/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415/GCA_018630415.1_ASM1863041v1_genomic.fna.gz GCA_018630415.1 1280
+/PATH/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395/GCA_018630395.1_ASM1863039v1_genomic.fna.gz GCA_018630395.1 1280
 
 # $ head genome_dirs.txt
-/home/gagoutin/work/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415
-/home/gagoutin/work/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395
+/PATH/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415
+/PATH/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395
 
 ```
 
@@ -633,7 +630,7 @@ It is kept at the Genotoul cluster in Toulouse, and all the information is avail
 That's how she's formatted:
 ### Formatting the database for EcoPCR
 
-#### 1. Récupérer l'assembly summary
+#### 1. Retrieving the summary assembly
 ```bash
 cp  /work/bank2/users_banks/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/assembly_summary.txt .
 ```
@@ -714,16 +711,16 @@ python complete_taxonomy.py name_seq_without_taxo.txt filtered_name_seq.taxo nam
 
 #### 7. Utilisation 
 
-*Utilisation du name_seq:*
+*Use of name_seq:*
 
-Nous pouvons sélectionner les données qui nous intéressent en utilisant le même filtre que celui appliqué à la fin de TaxonMarker, à l'aide du script filter_seq_with_keywords.py. Par exemple, pour les Lactobacillus, il peut être difficile de les identifier tous car ils n'ont pas tous un caractère commun exclusif. Ils appartiennent tous à la famille Lactobacillaceae, mais il est possible que d'autres genres en fassent également partie.
+We can select the data we are interested in using the same filter as that applied at the end of TaxonMarker, using the script filter_seq_with_keywords.py. For example, in the case of Lactobacillus, it can be difficult to identify them all because they do not all have an exclusive common trait. They all belong to the Lactobacillaceae family, but it is possible that other genera are also included.
 
 
-Ce fichier peut également être utilisé pour ajouter des informations à un fichier FASTA. Si vous disposez uniquement des identifiants des séquences, vous pouvez retrouver les informations taxonomiques correspondantes grâce au fichier name_seq.txt. Ce fichier permet de faire le lien entre les identifiants des séquences et leurs informations taxonomiques, facilitant ainsi l'enrichissement de votre fichier FASTA avec les données de taxonomie pertinentes.
+This file can also be used to add information to a FASTA file. If you only have the sequence identifiers, you can find the corresponding taxonomic information using the name_seq.txt file. This file provides a link between the sequence identifiers and their taxonomic information, making it easier to enrich your FASTA file with the relevant taxonomy data.
 
-*Lancement de EcoPCR sur la base*
+*Launch EcoPCR on the database*.
 
-on lance ecoPCR comme ça: 
+This is how you launch ecoPCR: 
 
 ```bash=
 #!/bin/bash
@@ -745,3 +742,4 @@ for assembly in $ecopcr_assembly_dir
     done
 
 ```
+

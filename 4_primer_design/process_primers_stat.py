@@ -21,9 +21,9 @@ def process_file_tsv(file_path):
     '''Function to process a TSV file and yield its content'''
     with open(file_path, 'r') as file:
         reader = csv.reader(file, delimiter='\t')
-        header = next(reader)  # Ignorer l'en-tête
+        header = next(reader) 
         for line in reader:
-            yield line
+            yield line # return line by line
 
 def calculate_gc_percentage_with_degeneracy(sequence):
     '''Function to calculate GC percentage considering base degeneracy'''
@@ -131,7 +131,7 @@ def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min
     ends_with_t_flag = ends_with_t(primer)
     self_complementarity_flag = self_complementarity(primer)
     gc_clamp_flag = has_single_gc_clamp(primer)
-    og_id= str(og_id) # sinon j'ai erreur : invalid literal for int() with base 10: '72971at1578'
+    og_id= str(og_id) #avoir error: invalid literal for int()
     og_data = og_info.get(og_id, {})
     number_of_seq = og_data.get("NumberOfSeq", "")
     percentage_nm = percent_NM(int(number_matching), int(number_of_seq))

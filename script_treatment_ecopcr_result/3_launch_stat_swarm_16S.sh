@@ -7,5 +7,5 @@
 
 module load devel/python/Python-3.11.1
 
-python /PATH/TaxonMarker/script_treatment_ecopcr_result/stats_report_taxo2.py -c cluster.txt -t all_modified.fna -o stats.txt -l rejected_clusters.txt -r cluster_corrected.txt
+python /PATH/TaxonMarker/script_treatment_ecopcr_result/stats_report_taxo2.py -c cluster.txt -o stats.txt -l rejected_clusters.txt -r cluster_corrected.txt
 

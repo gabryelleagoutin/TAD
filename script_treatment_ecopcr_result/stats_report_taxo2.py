@@ -10,7 +10,7 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
-def filter_lines_by_keywords(cluster_file, taxonomy_file, output_corrected_file, include_keywords=None, exclude_keywords=None, log_file=None):
+def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywords=None, exclude_keywords=None, log_file=None):
     """Filter lines within clusters based on required and excluded keywords in taxonomy."""
 
     # Compile regex patterns
@@ -24,14 +24,6 @@ def filter_lines_by_keywords(cluster_file, taxonomy_file, output_corrected_file,
     current_cluster = None
     cluster_lines = {}
 
-    # Parse the taxonomy file to extract taxonomy information
-    taxonomy_dict = {}
-    with open(taxonomy_file, 'r') as f:
-        for line in f:
-            if line.startswith(">"):
-                header = line.strip()
-                seq_id = header.split("|")[0][1:]
-                taxonomy_dict[seq_id] = header
 
     # Read and process the cluster file
     with open(cluster_file, 'r') as f:
@@ -206,7 +198,6 @@ def main():
     parser = argparse.ArgumentParser(description="Filter lines within clusters based on taxonomy, generate corrected clusters and statistics.",
        epilog="python stats_report.py -c cluster.txt -t all_modified.fna -o stats.txt -r cluster_corrected.txt -u uniq_taxo_good_discriminated.txt")
     parser.add_argument("-c", "--cluster_file", type=str, required=True, help="Input file containing cluster information (e.g., cluster.txt).")
-    parser.add_argument("-t", "--taxonomy_file", type=str, required=True, help="Input FASTA file containing taxonomy information (e.g., all_modified.fna).")
     parser.add_argument("-o", "--output_stats_file", type=str, required=True, help="Output file for the statistics report (e.g., stats.txt).")
     parser.add_argument("-r", "--output_corrected_file", type=str, required=True, help="Output file for the filtered clusters (e.g., cluster_corrected.txt).")
     parser.add_argument("-i", "--include_keywords", type=str, nargs='*', help="Keywords that must be present in taxonomy to keep a line (e.g., f__Lactobacillaceae).")
@@ -219,7 +210,6 @@ def main():
     # Filter lines within clusters based on inclusion and exclusion keywords
     filtered_clusters = filter_lines_by_keywords(
         args.cluster_file,
-        args.taxonomy_file,
         args.output_corrected_file,
         include_keywords=args.include_keywords,
         exclude_keywords=args.exclude_keywords,

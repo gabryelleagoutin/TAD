@@ -316,6 +316,9 @@ Nous utilisons le clustering avec l'outil Swarm pour mesurer la discrimination d
 python /PATH/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
 ```
 
+Nous aurons en sortie le fichier que ressort swarm (ex:fichier_swarm.txt) et le fichier qui formate les résultats de swarm (ex:cluster.txt)
+
+le fichier formater permet d'avoir toute les informations taxonomique de chaque cluster. 
 #### 3_launch_stat_swarm.sh
 
 Ce script nous permet d'obtenir des mesures de discrimination des espèces spécifiquement pour notre rang taxonomique. Il offre la possibilité d'inclure ou d'exclure certains termes dans la taxonomie, afin de générer un fichier statistique propre, limité uniquement à notre rang d'intérêt.
@@ -339,7 +342,7 @@ g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__De
 On relance donc notre script avec l'exclusion de ces mots là
 
 ```bash=
-python stats_report_taxo2.py -c cluster.txt -t all_modified.fna -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina -l rejected_clusters.txt -r cluster_corrected.txt
+python stats_report_taxo2.py -c cluster.txt -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina -l rejected_clusters.txt -r cluster_corrected.txt
 
 ```
 
@@ -395,7 +398,7 @@ Cela nous permettra de rechercher, parmi ces génomes, ceux qui possèdent une s
 Par exemple, pour les Lactobacillus, nous lancerions la recherche sur notre base de données microbienne en utilisant les critères suivants :
 
 ```bash=
-python filter_seq_with_keywords.py -s /home/gagoutin/work/BD_TaxonMarker/BD_ecoPCR/name_seq_with_taxo.txt -o filtered_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina
+python filter_seq_with_keywords.py -s /PATH/BD_TaxonMarker/BD_ecoPCR/name_seq_with_taxo.txt -o filtered_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina
 ```
 
 
@@ -450,7 +453,7 @@ python script_treatment_ecopcr_result/format_ecopcr_result.py -o . -t name_seq_1
 
 #### 2_launch_swarm.sh
 ```bash!
-python /home/gagoutin/work/Lactobacillus/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
+python /PATH/Lactobacillus/TaxonMarker/script_treatment_ecopcr_result/Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1
 ```
 
 ### 3_launch_stat_swarm_16S.sh
@@ -536,12 +539,12 @@ le fichier genome_files_with_taxid.txt contient le chemin jusqu'au nom du fichie
 
 ```bash=
 # $ head genome_files_with_taxid.txt
-/home/gagoutin/work/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415/GCA_018630415.1_ASM1863041v1_genomic.fna.gz GCA_018630415.1 1280
-/home/gagoutin/work/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395/GCA_018630395.1_ASM1863039v1_genomic.fna.gz GCA_018630395.1 1280
+/PATH/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415/GCA_018630415.1_ASM1863041v1_genomic.fna.gz GCA_018630415.1 1280
+/PATH/base_données//NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395/GCA_018630395.1_ASM1863039v1_genomic.fna.gz GCA_018630395.1 1280
 
 # $ head genome_dirs.txt
-/home/gagoutin/work/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415
-/home/gagoutin/work/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395
+/PATH/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/415
+/PATH/base_données/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/downloads/2024-05-15_11-08-32/files/GCA/018/630/395
 
 ```
 

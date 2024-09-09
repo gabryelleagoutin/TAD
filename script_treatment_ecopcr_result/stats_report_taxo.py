@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import sys
 
 __author__ = 'Gabryelle Agoutin - INRAE'
 __copyright__ = 'Copyright (C) 2024 INRAE'
@@ -10,7 +11,7 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
-def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywords=None, exclude_keywords=None, log_file=None):
+def filter_lines_by_keywords(cluster_file, include_keywords=None, exclude_keywords=None):
     """Filter lines within clusters based on required and excluded keywords in taxonomy."""
 
     # Compile regex patterns
@@ -22,7 +23,7 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
     current_cluster_taxonomies = set()
     current_cluster = None
     cluster_lines = {}
-
+    all_taxonomies = set()
 
     # Read and process the cluster file
     with open(cluster_file, 'r') as f:
@@ -40,6 +41,7 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
                         parts = content.split("\t")
                         if len(parts) == 3:
                             taxonomy = parts[2]
+                            all_taxonomies.add(taxonomy)
                             include_condition = not include_keywords or any(keyword in taxonomy for keyword in include_keywords)
                             exclude_condition = not exclude_keywords or not any(keyword in taxonomy for keyword in exclude_keywords)
                             if include_condition and exclude_condition:
@@ -76,25 +78,7 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
             else:
                 rejected_clusters.append((current_cluster, current_cluster_content))
 
-    # Write the filtered clusters to a file
-    with open(output_corrected_file, 'w') as f:
-        for cluster, content in filtered_clusters:
-            f.write(f"Cluster {cluster}:\n")
-            for line in content.values():
-                f.write(f"{line}\n")
-            f.write("\n")
-
-    # Write the rejected clusters if log_file is provided
-    if log_file:
-        with open(log_file, 'w') as log:
-            log.write("Rejected clusters:\n")
-            for cluster, content in rejected_clusters:
-                log.write(f"Cluster {cluster}:\n")
-                for line in content.values():
-                    log.write(f"{line}\n")
-                log.write("\n")
-
-    return filtered_clusters
+    return filtered_clusters, rejected_clusters, all_taxonomies
 
 def calculate_statistics(filtered_clusters, output_stats_file, output_taxo_file, output_taxo_good_discriminated_file):
     """Calculate and write statistics based on filtered clusters, and save unique taxonomies."""
@@ -205,28 +189,60 @@ def main():
     args = parser.parse_args()
 
     # Filter lines within clusters based on inclusion and exclusion keywords
-    filtered_clusters = filter_lines_by_keywords(
-        args.cluster_file,
-        args.output_corrected_file,
-        include_keywords=args.include_keywords,
-        exclude_keywords=args.exclude_keywords,
-        log_file=args.log_file
-    )
+    try:
+        filtered_clusters, rejected_clusters, all_taxonomies = filter_lines_by_keywords(
+            args.cluster_file,
+            include_keywords=args.include_keywords,
+            exclude_keywords=args.exclude_keywords,
+        )
+    # Check keywords in taxonomy
+        if args.include_keywords:
+            for keyword in args.include_keywords:
+                if not any(keyword in taxonomy for taxonomy in all_taxonomies):
+                     raise ValueError(f"Your word: {keyword} was not found in the taxonomy. Please correct the spelling.")
+        if args.exclude_keywords:
+            for keyword in args.exclude_keywords:
+                if not any(keyword in taxonomy for taxonomy in all_taxonomies):
+                     raise ValueError(f"Your word: {keyword} was not found in the taxonomy. Please correct the spelling.")
+        
+	# Write the filtered clusters to a file
+        with open(args.output_corrected_file, 'w') as f:
+            for cluster, content in filtered_clusters:
+                f.write(f"Cluster {cluster}:\n")
+                for line in content.values():
+                    f.write(f"{line}\n")
+                f.write("\n")
 
+    # Write the rejected clusters if log_file is provided
+        if args.log_file:
+            with open(args.log_file, 'w') as log:
+                log.write("Rejected clusters:\n")
+                for cluster, content in rejected_clusters:
+                    log.write(f"Cluster {cluster}:\n")
+                    for line in content.values():
+                        log.write(f"{line}\n")
+                    log.write("\n")
+        
     # Generate the statistics report based on the filtered clusters and save unique taxonomies
-    calculate_statistics(
-        filtered_clusters,
-        args.output_stats_file,
-        args.unique_taxo_file,
-        args.unique_taxo_good_discriminated_file
-    )
+        calculate_statistics(
+            filtered_clusters,
+            args.output_stats_file,
+            args.unique_taxo_file,
+            args.unique_taxo_good_discriminated_file
+        )
 
-    print(f"Statistics written to {args.output_stats_file}")
-    print(f"Filtered clusters written to {args.output_corrected_file}")
-    if args.log_file:
-        print(f"Rejected clusters logged to {args.log_file}")
-    print(f"Unique taxonomies written to {args.unique_taxo_file}")
-    print(f"Good discriminated taxonomies written to {args.unique_taxo_good_discriminated_file}")
 
+
+        print(f"Statistics written to {args.output_stats_file}")
+        print(f"Filtered clusters written to {args.output_corrected_file}")
+        if args.log_file:
+            print(f"Rejected clusters logged to {args.log_file}")
+        print(f"Unique taxonomies written to {args.unique_taxo_file}")
+        print(f"Good discriminated taxonomies written to {args.unique_taxo_good_discriminated_file}")
+    
+    except ValueError as e:
+        print(f"Error: {e}")
+
+        
 if __name__ == "__main__":
     main()

@@ -46,10 +46,12 @@ def process_swarm_output(swarm_file, taxonomy_dict, output_info_file):
             for cluster_id in cluster_ids:
                 seq_id = cluster_id.split("|")[0]
                 if seq_id in taxonomy_dict:
-                    out_file.write(f"\t - {seq_id}: {taxonomy_dict[seq_id]}\n")
+                    info = (taxonomy_dict[seq_id]).split(" ")
+                    tax = info[2]
+                    taxid = info[1].split(';')[0]
+                    out_file.write(f"{seq_id}\t{taxid}\t{tax}\n")
                 else:
-                    out_file.write(f"\t - No info found for {seq_id} in the file.\n")
-            out_file.write("\n")
+                    out_file.write(f"No info found for {seq_id} in the file.\n")
 
 def main():
     parser = argparse.ArgumentParser(description="Pipeline to process EcoPCR output, run Swarm, and analyze results.",

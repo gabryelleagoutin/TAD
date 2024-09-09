@@ -15,7 +15,6 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
 
     # Compile regex patterns
     cluster_pattern = re.compile(r"Cluster (\d+):")
-    taxonomy_pattern = re.compile(r"taxid=\d+; (.*)")
 
     filtered_clusters = []
     rejected_clusters = []
@@ -38,9 +37,9 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
                     filtered_lines = {}
                     for seq_id, content in current_cluster_content.items():
                         # Extract taxonomy information
-                        taxonomy_match = taxonomy_pattern.search(content)
-                        if taxonomy_match:
-                            taxonomy = taxonomy_match.group(1)
+                        parts = content.split("\t")
+                        if len(parts) == 3:
+                            taxonomy = parts[2]
                             include_condition = not include_keywords or any(keyword in taxonomy for keyword in include_keywords)
                             exclude_condition = not exclude_keywords or not any(keyword in taxonomy for keyword in exclude_keywords)
                             if include_condition and exclude_condition:
@@ -56,20 +55,18 @@ def filter_lines_by_keywords(cluster_file, output_corrected_file, include_keywor
                 current_cluster_taxonomies = set()
                 current_cluster_content = {}
             else:
-                taxonomy_match = taxonomy_pattern.search(line)
-                if taxonomy_match:
-                    current_cluster_taxonomies.add(taxonomy_match.group(1))
-                seq_id = line.split(":")[0].strip()
-                if seq_id:
+                parts = line.split("\t")
+                if len(parts) == 3:
+                    seq_id = parts[0].strip()
                     current_cluster_content[seq_id] = line
 
         # Process the last cluster
         if current_cluster is not None:
             filtered_lines = {}
             for seq_id, content in current_cluster_content.items():
-                taxonomy_match = taxonomy_pattern.search(content)
-                if taxonomy_match:
-                    taxonomy = taxonomy_match.group(1)
+                parts = content.split("\t")
+                if len(parts) == 3:
+                    taxonomy = parts[2]
                     include_condition = not include_keywords or any(keyword in taxonomy for keyword in include_keywords)
                     exclude_condition = not exclude_keywords or not any(keyword in taxonomy for keyword in exclude_keywords)
                     if include_condition and exclude_condition:
@@ -117,9 +114,9 @@ def calculate_statistics(filtered_clusters, output_stats_file, output_taxo_file,
     for cluster, content in filtered_clusters:
         taxonomies = set()
         for line in content.values():
-            taxonomy_match = re.search(r"taxid=\d+; (.*)", line)
-            if taxonomy_match:
-                taxonomy = taxonomy_match.group(1)
+            parts = line.split("\t")
+            if len(parts) == 3:
+                taxonomy = parts[2]
                 taxonomies.add(taxonomy)
                 unique_taxonomies.add(taxonomy)
 

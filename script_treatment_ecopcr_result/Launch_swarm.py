@@ -48,7 +48,7 @@ def process_swarm_output(swarm_file, taxonomy_dict, output_info_file):
                 if seq_id in taxonomy_dict:
                     info = (taxonomy_dict[seq_id]).split(" ")
                     tax = info[2]
-                    taxid = info[1].split(';')[0]
+                    taxid = info[1].split(';')[0].split('=')[1]
                     out_file.write(f"{seq_id}\t{taxid}\t{tax}\n")
                 else:
                     out_file.write(f"No info found for {seq_id} in the file.\n")

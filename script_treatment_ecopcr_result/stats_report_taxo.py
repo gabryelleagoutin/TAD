@@ -11,6 +11,9 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
+
+
+
 def filter_lines_by_keywords(cluster_file, include_keywords=None, exclude_keywords=None):
     """Filter lines within clusters based on required and excluded keywords in taxonomy."""
 
@@ -174,6 +177,104 @@ def calculate_statistics(filtered_clusters, output_stats_file, output_taxo_file,
     print(f"Percentage of good discriminated taxonomies: {percentage_good_taxonomies:.2f}%")
     print(f"Number of taxonomies both good and bad discriminated: {num_overlapping_taxonomies}")
 
+def generate_html_output(txt_file, html_file):
+    """Generate an HTML file from a text file with clickable taxid links."""
+    with open(txt_file, 'r') as f, open(html_file, 'w') as out_file:
+        out_file.write("<html><body>\n")
+        cluster_lines = f.readlines()
+        cluster_pattern = re.compile(r"Cluster (\d+):")
+
+        for line in cluster_lines:
+            line = line.strip()
+            cluster_match = cluster_pattern.match(line)
+            if cluster_match:
+                out_file.write(f"<h2>{line}</h2>\n<ul>\n")
+            elif line:
+                parts = line.split("\t")
+                if len(parts) == 3:
+                    seq_id = parts[0]
+                    taxonomy = parts[2]
+                    taxid_match = re.search(r'taxid=(\d+)', taxonomy)
+                    taxid = taxid_match.group(1) if taxid_match else "N/A"
+                    if taxid != "N/A":
+                        out_file.write(f"<li>{seq_id}\t<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={taxid}' target='_blank'>{taxid}</a>\t{taxonomy}</li>\n")
+                    else:
+                        out_file.write(f"<li>{seq_id}\t{taxonomy}</li>\n")
+                else:
+                    out_file.write(f"<li>{line}</li>\n")
+            else:
+                out_file.write("</ul>\n")
+
+        out_file.write("</body></html>\n")
+
+
+
+def generate_html_output(cluster_corrected_file, output_html_file):
+    """Generate an HTML report from the corrected clusters with clickable taxid links."""
+    with open(cluster_corrected_file, 'r') as txt_file, open(output_html_file, 'w') as html_file:
+        lines = txt_file.readlines()
+        html_file.write("<html><body>\n")
+        in_cluster = False  #Variable to check if you are in a cluster
+        for line in lines:
+            if line.startswith("Cluster"):
+                if in_cluster:  # close previously cluster
+                    html_file.write("</ul>\n")
+                html_file.write(f"<h2>{line.strip()}</h2>\n<ul>\n")
+                in_cluster = True  # we are in new cluster
+            else:
+                parts = line.strip().split("\t")
+                if len(parts) == 3:
+                    seq_id = parts[0]
+                    taxid = parts[1]
+                    taxonomy = parts[2]
+                    # Create a clickable link for the taxid
+                    html_file.write(f"<li>{seq_id}\t<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={taxid}' target='_blank'>{taxid}</a>\t{taxonomy}</li>\n")
+        if in_cluster:  # close last cluster
+            html_file.write("</ul>\n")
+        html_file.write("</body></html>\n")
+        
+def generate_html_output_from_stats(stats_file, output_html_file):
+    """Generate an HTML report from the statistics output with clickable taxid links."""
+    with open(stats_file, 'r') as txt_file, open(output_html_file, 'w') as html_file:
+        lines = txt_file.readlines()
+        html_file.write("<html><body>\n")
+
+        for line in lines:
+            line = line.strip()
+            if line.startswith("Number") or line.startswith("Percentage") or line.startswith("Total"):
+                # For general statistics, write them as paragraphs
+                html_file.write(f"<p>{line}</p>\n")
+            elif line.startswith("Badly discriminated clusters:"):
+                html_file.write("<h2>Badly discriminated clusters:</h2>\n")
+                html_file.write("<ul>\n")
+            elif line.startswith("Taxonomies both good and bad discriminated:"):
+                html_file.write("</ul>\n")  # End the previous list
+                html_file.write("<h2>Taxonomies both good and bad discriminated:</h2>\n")
+            elif line.startswith("Cluster"):
+                html_file.write(f"<h3>{line}</h3>\n<ul>\n")
+            elif line and not line.startswith("k__") and not line.startswith("Cluster"):
+                parts = line.split("\t")
+                if len(parts) == 3:
+                    seq_id = parts[0]
+                    taxid = parts[1]
+                    taxonomy = parts[2]
+                    # Create a clickable link for the taxid
+                    html_file.write(f"<li>{seq_id}\t<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={taxid}' target='_blank'>{taxid}</a>\t{taxonomy}</li>\n")
+                else:
+                    html_file.write(f"<li>{line}</li>\n")
+            elif line.startswith("k__"):
+                taxonomy = line.split(":")[0]
+                html_file.write(f"<p><b>{taxonomy}:</b></p>\n<ul>\n")
+            elif line.startswith("  Well discriminated"):
+                html_file.write(f"<li>{line}</li>\n")
+            elif line.startswith("  Poorly discriminated"):
+                html_file.write(f"<li>{line}</li>\n")
+            else:
+                html_file.write("</ul>\n")
+
+        html_file.write("</body></html>\n")
+
+
 def main():
     # Argument parser
     parser = argparse.ArgumentParser(description="Filter lines within clusters based on taxonomy, generate corrected clusters and statistics.",
@@ -211,17 +312,14 @@ def main():
                 f.write(f"Cluster {cluster}:\n")
                 for line in content.values():
                     f.write(f"{line}\n")
-                f.write("\n")
 
     # Write the rejected clusters if log_file is provided
         if args.log_file:
             with open(args.log_file, 'w') as log:
-                log.write("Rejected clusters:\n")
                 for cluster, content in rejected_clusters:
                     log.write(f"Cluster {cluster}:\n")
                     for line in content.values():
                         log.write(f"{line}\n")
-                    log.write("\n")
         
     # Generate the statistics report based on the filtered clusters and save unique taxonomies
         calculate_statistics(
@@ -230,9 +328,14 @@ def main():
             args.unique_taxo_file,
             args.unique_taxo_good_discriminated_file
         )
-
-
-
+        # html
+        output_html_stats_file = args.output_stats_file.replace('.txt', '.html')
+        generate_html_output_from_stats(args.output_stats_file, output_html_stats_file)
+        output_html_file = args.output_corrected_file.replace('.txt', '.html')
+        generate_html_output(args.output_corrected_file, output_html_file)
+        output_html_file_rejected = args.log_file.replace('.txt', '.html')
+        generate_html_output(args.log_file, output_html_file_rejected)
+               
         print(f"Statistics written to {args.output_stats_file}")
         print(f"Filtered clusters written to {args.output_corrected_file}")
         if args.log_file:

@@ -118,4 +118,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     run_ecopcr(args.tsv_file, args.db_paths)
-    analyze_ecopcr_outputs(args.tsv_file)

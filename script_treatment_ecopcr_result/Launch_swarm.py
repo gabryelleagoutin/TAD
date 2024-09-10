@@ -53,6 +53,29 @@ def process_swarm_output(swarm_file, taxonomy_dict, output_info_file):
                 else:
                     out_file.write(f"No info found for {seq_id} in the file.\n")
 
+def process_swarm_output_html(swarm_file, taxonomy_dict, output_info_file_html):
+    """Process the Swarm output to generate a detailed HTML report."""
+    with open(swarm_file, 'r') as clusters_file, open(output_info_file_html, 'w') as out_file:
+        clusters = clusters_file.readlines()
+        out_file.write("<html><body>\n")
+        for i, cluster in enumerate(clusters, start=1):
+            cluster_ids = cluster.strip().split()
+            out_file.write(f"<h2>Cluster {i}:</h2>\n<ul>\n")
+            for cluster_id in cluster_ids:
+                seq_id = cluster_id.split("|")[0]
+                if seq_id in taxonomy_dict:
+                    info = (taxonomy_dict[seq_id]).split(" ")
+                    tax = info[2]
+                    taxid = info[1].split(';')[0].split('=')[1]
+                    # Create a clickable link for the taxid
+                    out_file.write(f"<li>{seq_id}\t<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={taxid}' target='_blank'>{taxid}</a>\t{tax}</li>\n")
+                else:
+                    out_file.write(f"<li>No info found for {seq_id} in the file.</li>\n")
+            out_file.write("</ul>\n")
+        out_file.write("</body></html>\n")
+        
+        
+        
 def main():
     parser = argparse.ArgumentParser(description="Pipeline to process EcoPCR output, run Swarm, and analyze results.",
        epilog="Exemple: python Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1")
@@ -62,6 +85,7 @@ def main():
     parser.add_argument("-t", "--threads", type=int, default=4, help="Number of threads to use for Swarm.")
     parser.add_argument("-a", "--abundance", type=int, default=1, help="Minimum abundance for Swarm.")
     parser.add_argument("-d", "--distance", type=int, default=1, help="Distance threshold for Swarm.")
+    parser.add_argument("-oh", "--output_info_file_html", type=str, required=False, help="The output HTML info file (cluster.html).")
     args = parser.parse_args()
 
     # Step 1: Parse and extract taxonomy information from the modified FASTA file
@@ -76,6 +100,11 @@ def main():
     print("Processing Swarm output...")
     process_swarm_output(args.swarm_output_file, taxonomy_dict, args.output_info_file)
     print(f"Results written to {args.output_info_file}")
+    
+    if args.output_info_file_html:
+        print("Processing Swarm output to generate HTML report...")
+        process_swarm_output_html(args.swarm_output_file, taxonomy_dict, args.output_info_file_html)
+        print(f"HTML report written to {args.output_info_file_html}")
 
 if __name__ == "__main__":
     main()

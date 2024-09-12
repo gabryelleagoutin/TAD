@@ -23,6 +23,20 @@ def load_data(file_name):
     with open(file_name, 'r') as file:
         return set(line.strip() for line in file)
 
+def save_set_to_file(output_file, data_set):
+    """Save a set of data to a text file with a title.
+
+    Args:
+        output_file (str): The path to the output text file.
+        title (str): Title to be added at the beginning of the file.
+        data_set (set): The set of data to be saved.
+    """
+    with open(output_file, 'w') as file:
+        for item in data_set:
+            file.write(f"{item}\n")
+    print(f"Data saved to '{output_file}'")
+    
+    
 def create_venn_diagrams(data, output_file):
     """Create and save Venn diagrams with descriptions.
 
@@ -66,6 +80,34 @@ def create_venn_diagrams(data, output_file):
     plt.savefig(output_file, bbox_inches='tight')  # Use bbox_inches='tight' to fit the layout
     print(f"Venn diagrams with descriptions saved to '{output_file}'")
 
+def save_venn_sets(data):
+    """Save the unique and intersecting elements of the Venn diagram to text files.
+
+    Args:
+        data (dict): A dictionary with file names as keys and sets of data as values.
+        output_prefix (str): Prefix for the output files.
+    """
+    # Caught species comparison
+    only_target_caught = data['uniq_taxo.txt'] - data['uniq_taxo_16S.txt']
+    only_16S_caught = data['uniq_taxo_16S.txt'] - data['uniq_taxo.txt']
+    intersection_caught = data['uniq_taxo.txt'] & data['uniq_taxo_16S.txt']
+    
+    # Save caught species comparison results
+    save_set_to_file('list_only_target_gene_caught.txt', only_target_caught)
+    save_set_to_file('list_only_16S_gene_caught.txt', only_16S_caught)
+    save_set_to_file('list_intersection_caught.txt', intersection_caught)
+
+    # Species correctly discriminated
+    only_target_discriminated = data['uniq_taxo_good_discriminated.txt'] - data['uniq_taxo_good_discriminated_16S.txt']
+    only_16S_discriminated = data['uniq_taxo_good_discriminated_16S.txt'] - data['uniq_taxo_good_discriminated.txt']
+    intersection_discriminated = data['uniq_taxo_good_discriminated.txt'] & data['uniq_taxo_good_discriminated_16S.txt']
+
+    # Save species correctly discriminated results
+    save_set_to_file('list_only_target_gene_discriminated.txt', only_target_discriminated)
+    save_set_to_file('list_only_16S_gene_discriminated.txt', only_16S_discriminated)
+    save_set_to_file('list_intersection_discriminated.txt', intersection_discriminated)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Create Venn diagrams comparing species data.',
@@ -92,6 +134,9 @@ def main():
 
     # Create Venn diagrams
     create_venn_diagrams(data, args.output)
+    
+    # Save unique and intersecting sets to text files
+    save_venn_sets(data)
 
 if __name__ == '__main__':
     main()

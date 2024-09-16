@@ -27,11 +27,11 @@ def parse_fasta_with_taxonomy(fasta_file):
 def run_swarm(fasta_file, output_file, threads=4, abundance=1, distance=1):
     """Run Swarm to cluster sequences."""
     cmd = [
-        "swarm", 
-        "-t", str(threads), 
-        "-a", str(abundance), 
-        "-d", str(distance), 
-        "-f", fasta_file, 
+        "swarm",
+        "-t", str(threads),
+        "-a", str(abundance),
+        "-d", str(distance),
+        "-f", fasta_file,
         "-o", output_file
     ]
     subprocess.run(cmd, check=True)
@@ -71,11 +71,38 @@ def process_swarm_output_html(swarm_file, taxonomy_dict, output_info_file_html):
                     out_file.write(f"<li>{seq_id}\t<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={taxid}' target='_blank'>{taxid}</a>\t{tax}</li>\n")
                 else:
                     out_file.write(f"<li>No info found for {seq_id} in the file.</li>\n")
-            out_file.write("</ul>\n")l
+            out_file.write("</ul>\n")
         out_file.write("</body></html>\n")
-        
-        
-        
+
+def generate_taxonomy_table(taxonomy_dict, output_table_file="taxonomy_rank_table.txt"):
+    """Generate a table with taxonomy ranks (Kingdom, Phylum, etc.) and unique counts."""
+    taxonomy_levels = ["Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"]
+    rank_dict = {level: set() for level in taxonomy_levels}
+
+    with open(output_table_file, 'w') as out_file:
+        out_file.write("\t".join(taxonomy_levels) + "\n")
+
+        for tax_info in taxonomy_dict.values():
+            tax_ranks = tax_info.split(" ")[2].split(";")
+            if len(tax_ranks) == 7:  
+                for i, level in enumerate(taxonomy_levels):
+                    rank_dict[level].add(tax_ranks[i])
+
+        # Write the unique counts for each rank
+        unique_counts = [str(len(rank_dict[level])) for level in taxonomy_levels]
+        out_file.write("\t".join(unique_counts) + "\n")
+
+        # Write the unique names for each rank
+        max_rows = max(len(rank_dict[level]) for level in taxonomy_levels)
+        rank_lists = [list(rank_dict[level]) for level in taxonomy_levels]
+        for i in range(max_rows):
+            row = [
+                rank_lists[j][i] if i < len(rank_lists[j]) else "" for j in range(len(taxonomy_levels))
+            ]
+            out_file.write("\t".join(row) + "\n")
+
+    print(f"Taxonomy rank table written to {output_table_file}")
+
 def main():
     parser = argparse.ArgumentParser(description="Pipeline to process EcoPCR output, run Swarm, and analyze results.",
        epilog="Exemple: python Launch_swarm.py -f all_modified.fna -s fichier_swarm.txt -o cluster.txt  -t 4 -a 1 -d 1")
@@ -101,10 +128,14 @@ def main():
     process_swarm_output(args.swarm_output_file, taxonomy_dict, args.output_info_file)
     print(f"Results written to {args.output_info_file}")
     
-    if args.output_info_file_html:
-        print("Processing Swarm output to generate HTML report...")
-        process_swarm_output_html(args.swarm_output_file, taxonomy_dict, args.output_info_file_html)
-        print(f"HTML report written to {args.output_info_file_html}")
+    # Step 4: Generate taxonomy rank table
+    generate_taxonomy_table(taxonomy_dict)
+    
+    
+    # Step 4: Generate HTML file
+    output_html_file = args.output_info_file.replace('.txt', '.html')
+    process_swarm_output_html(args.swarm_output_file, taxonomy_dict,output_html_file)
+
 
 if __name__ == "__main__":
     main()

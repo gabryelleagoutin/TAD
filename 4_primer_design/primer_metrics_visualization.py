@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import json
 import pandas as pd
+import json
 import argparse
 
 __author__ = 'Gabryelle Agoutin - INRAE'
@@ -16,77 +16,204 @@ def read_primers_from_table(filename):
     df = pd.read_csv(filename, delimiter='\t')
     return df
 
-def generate_highcharts_script_from_primers(primers, chart_id_prefix, legend_prefix, letter_mapping, title):
-    primer_colors = ['#277da1', '#577590', '#4d908e', '#43aa8b', '#90be6d', '#f9c74f', '#f9844a', '#f8961e', '#f3722c', '#f94144']
+def generate_split_yaxis_highcharts_script(primers_A, primers_B, chart_id_prefix, title):
+    letter_mapping = {
+        'A': 1, 'C': 1, 'G': 1, 'T': 1,
+        'R': 2, 'Y': 2, 'S': 2, 'W': 2, 'K': 2, 'M': 2,
+        'B': 3, 'D': 3, 'H': 3, 'V': 3, 'N': 4
+    }
 
-    series_data = []
-    for i, primer in enumerate(primers, start=1):
-        data = []
-        for j, char in enumerate(primer, start=1):
-            if char in letter_mapping:
-                data.append({
-                    'category': str(j),  #  Keep the position as a string
-                    'y': letter_mapping[char]['y'],
-                    'letter': letter_mapping[char]['letter']
-                })
-                
-        series_data.append({
-            'name': f'{legend_prefix} {i}',
-            'id': f'{chart_id_prefix}_{i}',
-            'color': primer_colors[i % len(primer_colors)],
-            'data': data,
-            'dataLabels': {
-                'enabled': True,
-                'color': '#000000',
-                'format': '{point.letter}',
-                'style': {
-                    'fontSize': '10px',
-                    'fontFamily': 'Verdana, sans-serif'
-                }
-            }
+    series_A = []
+    series_B = []
+    for j, char in enumerate(primers_A, start=1):
+        series_A.append({
+            'category': str(j),
+            'y': letter_mapping.get(char, 1),
+            'letter': char
         })
 
-    highcharts_script = f"""
+    for j, char in enumerate(primers_B, start=1):
+        series_B.append({
+            'category': str(j),
+            'y': letter_mapping.get(char, 1),
+            'letter': char
+        })
+
+    split_highcharts_script = f"""
 Highcharts.chart('container{chart_id_prefix}', {{
     chart: {{
-        type: 'line'
+        type: 'line',
+        spacingBottom: 50
     }},
     title: {{
         text: '{title}'
     }},
     xAxis: {{
-        categories: {json.dumps(list(range(1, len(primers[0]) + 2)))}, 
+        categories: {json.dumps(list(range(1, len(primers_A) + 1)))}
+    }},
+    yAxis: [{{
+        title: {{
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        }},
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
         labels: {{
-            autoRotation: [-45, -90],
-            step: 1,
+            align: 'left',
+            x: -10,
+            y: 10,
             style: {{
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif'
+                fontSize: '10px'
             }}
         }},
-        
-    }},
-    yAxis: {{
-        min: 0,
+        height: '45%',
+        offset: 0
+    }}, {{
         title: {{
-            text: 'Degeneracy Level'
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        }},
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {{
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {{
+                fontSize: '10px'
+            }}
+        }},
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }}],
+    plotOptions: {{
+        series: {{
+            dataLabels: {{
+                enabled: true,
+                format: '{{point.letter}}',
+                style: {{
+                    fontSize: '10px'
+                }}
+            }}
         }}
     }},
-    legend: {{
-        enabled: true
-    }},
-    tooltip: {{
-        formatter: function () {{
-            return '<b>' + this.series.name + '</b><br/>' +
-                   'Position ' + this.point.category + ': ' +
-                   this.point.options.letter + '<br/>' +
-                   'Valeur: ' + this.point.y;
-        }}
-    }},
-    series: {json.dumps(series_data, indent=4)}
+    series: [{{
+        name: 'Forward Primer',
+        data: {json.dumps(series_A)},
+        yAxis: 0
+    }}, {{
+        name: 'Reverse Primer',
+        data: {json.dumps(series_B)},
+        yAxis: 1
+    }}]
 }});
 """
-    return highcharts_script
+    return split_highcharts_script
+
+def generate_split_gc_content_script(primers_A, primers_B, chart_id_prefix, title):
+    gc_mapping = {'A': 0, 'C': 1, 'G': 1, 'T': 0, 'R': 0.5, 'Y': 0.5, 'S': 1, 'W': 0, 'K': 0.5, 'M': 0.5, 'B': 0.667, 'D': 0.333, 'H': 0.333, 'V': 0.667, 'N': 0.5}
+
+    series_A = []
+    series_B = []
+
+    for j, char in enumerate(primers_A, start=1):
+        series_A.append({
+            'category': str(j),
+            'y': gc_mapping.get(char, 0),
+            'letter': char
+        })
+
+    for j, char in enumerate(primers_B, start=1):
+        series_B.append({
+            'category': str(j),
+            'y': gc_mapping.get(char, 0),
+            'letter': char
+        })
+
+    split_gc_content_script = f"""
+Highcharts.chart('container{chart_id_prefix}', {{
+    chart: {{
+        type: 'line',
+        spacingTop: 50
+    }},
+    title: {{
+        text: '{title}'
+    }},
+    xAxis: {{
+        categories: {json.dumps(list(range(1, len(primers_A) + 1)))}
+    }},
+    yAxis: [{{
+        title: {{
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        }},
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {{
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {{
+                fontSize: '10px'
+            }}
+        }},
+        height: '45%',
+        offset: 0
+    }}, {{
+        title: {{
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        }},
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {{
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {{
+                fontSize: '10px'
+            }}
+        }},
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }}],
+    plotOptions: {{
+        series: {{
+            dataLabels: {{
+                enabled: true,
+                format: '{{point.letter}}',
+                style: {{
+                    fontSize: '10px'
+                }}
+            }}
+        }}
+    }},
+    series: [{{
+        name: 'Forward Primer',
+        data: {json.dumps(series_A)},
+        yAxis: 0
+    }}, {{
+        name: 'Reverse Primer',
+        data: {json.dumps(series_B)},
+        yAxis: 1
+    }}]
+}});
+"""
+    return split_gc_content_script
 
 def generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors):
     series_data = []
@@ -104,54 +231,22 @@ def generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors):
         primer_size_B = primer['Primer_Size_B']
         end_pos_B = pos_B + primer_size_B
 
-        # Check whether a series for this primer index already exists
-        serie_exists = False
-        for serie in series_data:
-            if serie['name'] == f'Primer {primer["Index"]}':
-                serie['data'].append({
-                    'x': pos_A,
-                    'x2': end_pos_A,
-                    'y': 0,
-                    'color': color
-                })
-                serie['data'].append({
-                    'x': pos_B,
-                    'x2': end_pos_B,
-                    'y': 1,
-                    'color': color
-                })
-                serie_exists = True
-                break
-
-        if not serie_exists:
-            series_data.append({
-                'name': f'Primer {primer["Index"]}',
-                'data': [{
-                    'x': pos_A,
-                    'x2': end_pos_A,
-                    'y': 0,
-                    'color': color
-                }, {
-                    'x': pos_B,
-                    'x2': end_pos_B,
-                    'y': 1,
-                    'color': color
-                }],
-                'color': color,  
-                'dataLabels': {
-                    'enabled': True,
-                    'color': '#000000',
-                    'format': '{point.name}'
-                }
-            })
+        series_data.append({
+            'name': f'Primer {primer["Index"]}',
+            'data': [
+                {'x': pos_A, 'x2': end_pos_A, 'y': 0, 'color': color},
+                {'x': pos_B, 'x2': end_pos_B, 'y': 1, 'color': color}
+            ],
+            'color': color
+        })
 
     highcharts_script = f"""
-Highcharts.chart('container_{og_id}', {{
+Highcharts.chart('container_xrange_{og_id}', {{
     chart: {{
         type: 'xrange'
     }},
     title: {{
-        text: 'Primers position one the alignment for {og_id}'
+        text: 'Primer Position for {og_id}'
     }},
     xAxis: {{
         title: {{
@@ -167,113 +262,146 @@ Highcharts.chart('container_{og_id}', {{
         }},
         reversed: true
     }},
-    legend: {{
-        enabled: true,
-        itemStyle: {{
-            color: '#000000'
-        }},
-        itemHoverStyle: {{
-            color: '#FF0000'
-        }},
-        itemHiddenStyle: {{
-            color: '#CCCCCC'
-        }},
-        symbolWidth: 30,
-        symbolHeight: 10
-    }},
     series: {json.dumps(series_data, indent=4)}
 }});
 """
     return highcharts_script
 
-
-
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="""Generates an HTML file with Highcharts visualisations from a tabular primers file.""",
-    epilog="Example:  python primer_metrics_visualization_prod.py -i sorted_results.tsv -o metrics_visualization.html")
-    parser.add_argument('-i', '--input', required=True, help="Path to input file. This is the array of primers with selected pairs(sorted_results.tsv).")
-    parser.add_argument('-o', '--output', required=True, help="output HTML name.")
-    
+    parser = argparse.ArgumentParser(description="""Generates an HTML file with Highcharts visualizations from a tabular primers file.""",
+                                     epilog="Example: python primer_metrics_visualization.py -i sorted_results.tsv -o visualization.html")
+
+    parser.add_argument('-i', '--input', required=True, help="Path to input file. This is the array of primers with selected pairs (sorted_results.tsv).")
+    parser.add_argument('-o', '--output', required=True, help="Output HTML file name.")
+
     args = parser.parse_args()
 
-    # df
     df = read_primers_from_table(args.input)
 
-    # Highcharts Primer_A Reverse_Complement_B
-    primers_A = df['Primer_A'].tolist()
-    primers_B_reverse = df['Reverse_Complement_B'].tolist()
+    # Initialize variables to collect all chart scripts and chart divs
+    all_chart_scripts = ""
+    all_content_blocks = ""
 
-    letter_mapping = {
-        'A': {'y': 1, 'letter': 'A'},
-        'C': {'y': 1, 'letter': 'C'},
-        'G': {'y': 1, 'letter': 'G'},
-        'T': {'y': 1, 'letter': 'T'},
-        'R': {'y': 2, 'letter': 'R'},
-        'Y': {'y': 2, 'letter': 'Y'},
-        'S': {'y': 2, 'letter': 'S'},
-        'W': {'y': 2, 'letter': 'W'},
-        'K': {'y': 2, 'letter': 'K'},
-        'M': {'y': 2, 'letter': 'M'},
-        'B': {'y': 3, 'letter': 'B'},
-        'D': {'y': 3, 'letter': 'D'},
-        'H': {'y': 3, 'letter': 'H'},
-        'V': {'y': 3, 'letter': 'V'},
-        'N': {'y': 4, 'letter': 'N'}
-    }
+    # Generate the existing line and GC content charts
+    for index, row in df.iterrows():
+        primer_data = row.to_dict()
 
-    highcharts_script_A = generate_highcharts_script_from_primers(primers_A, 'A', 'Primer', letter_mapping, 'Nucleotide Base Degeneracy Level')
-    highcharts_script_B_reverse = generate_highcharts_script_from_primers(primers_B_reverse, 'B', 'Reverse_Primer', letter_mapping, 'Nucleotide Base Degeneracy Level')
+        chart_id_prefix = f"Combined_{index}"
+        gc_chart_id_prefix = f"GC_Combined_{index}"
 
-    # min GC
-    letter_mapping_gc = {
-        'A': {'y': 1, 'letter': 'A'},
-        'C': {'y': 2, 'letter': 'C'},
-        'G': {'y': 2, 'letter': 'G'},
-        'T': {'y': 1, 'letter': 'T'},
-        'R': {'y': 1, 'letter': 'R'},
-        'Y': {'y': 1, 'letter': 'Y'},
-        'S': {'y': 2, 'letter': 'S'},
-        'W': {'y': 1, 'letter': 'W'},
-        'K': {'y': 1, 'letter': 'K'},
-        'M': {'y': 1, 'letter': 'M'},
-        'B': {'y': 1, 'letter': 'B'},
-        'D': {'y': 1, 'letter': 'D'},
-        'H': {'y': 1, 'letter': 'H'},
-        'V': {'y': 1, 'letter': 'V'},
-        'N': {'y': 1, 'letter': 'N'}
-    }
+        primers_A = row['Primer_A']
+        primers_B_reverse = row['Reverse_Complement_B']
 
-    highcharts_script_A_gc = generate_highcharts_script_from_primers(primers_A, 'A_GC', 'Primer_GC', letter_mapping_gc, 'Nucleotide Minimal GC Content')
-    highcharts_script_B_reverse_gc = generate_highcharts_script_from_primers(primers_B_reverse, 'B_GC', 'Reverse_Primer_GC', letter_mapping_gc, 'Nucleotide Minimal GC Content')
+        split_chart_script = generate_split_yaxis_highcharts_script(primers_A, primers_B_reverse, chart_id_prefix, 'Forward and Reverse Primer Degeneracy Level')
+        split_gc_content_script = generate_split_gc_content_script(primers_A, primers_B_reverse, gc_chart_id_prefix, 'Forward and Reverse Primer GC Content')
 
-    # max GC
-    letter_mapping_gc_max = {
-        'A': {'y': 1, 'letter': 'A'},
-        'C': {'y': 2, 'letter': 'C'},
-        'G': {'y': 2, 'letter': 'G'},
-        'T': {'y': 1, 'letter': 'T'},
-        'R': {'y': 2, 'letter': 'R'},
-        'Y': {'y': 2, 'letter': 'Y'},
-        'S': {'y': 2, 'letter': 'S'},
-        'W': {'y': 1, 'letter': 'W'},
-        'K': {'y': 2, 'letter': 'K'},
-        'M': {'y': 1, 'letter': 'M'},
-        'B': {'y': 2, 'letter': 'B'},
-        'D': {'y': 2, 'letter': 'D'},
-        'H': {'y': 2, 'letter': 'H'},
-        'V': {'y': 2, 'letter': 'V'},
-        'N': {'y': 1, 'letter': 'N'}
-    }
+        all_chart_scripts += split_chart_script + "\n" + split_gc_content_script + "\n"
 
-    highcharts_script_A_gc_max = generate_highcharts_script_from_primers(primers_A, 'A_GC_Max', 'Primer_GC_Max', letter_mapping_gc_max, 'Nucleotide Maximal GC Content')
-    highcharts_script_B_reverse_gc_max = generate_highcharts_script_from_primers(primers_B_reverse, 'B_GC_Max', 'Reverse_Primer_GC_Max', letter_mapping_gc_max, 'Nucleotide Maximal GC Content')
+        content_block = f"""
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2">OG ID</th>
+                        <td colspan="2">{primer_data.get('OG_ID', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Gene Name</th>
+                        <td colspan="2">{primer_data.get('GeneName', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Potential Amplicon Size</th>
+                        <td colspan="2">{primer_data.get('potential_amplicon_size', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Total Score</th>
+                        <td colspan="2">{primer_data.get('Total_score', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Min Size Amplicon</th>
+                        <td colspan="2">{primer_data.get('min_size_amplicon', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Max Size Amplicon</th>
+                        <td colspan="2">{primer_data.get('max_size_amplicon', '')}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">Primer A</th>
+                        <th colspan="2" style="text-align: center;">Primer B</th>
+                    </tr>
+                    <tr>
+                        <th>Primer A</th><td>{primer_data.get('Primer_A', '')}</td>
+                        <th>Primer B</th><td>{primer_data.get('Primer_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Position A</th><td>{primer_data.get('Position_A', '')}</td>
+                        <th>Position B</th><td>{primer_data.get('Position_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Number Matching A</th><td>{primer_data.get('Number_matching_A', '')}</td>
+                        <th>Number Matching B</th><td>{primer_data.get('Number_matching_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Percentage NM A</th><td>{primer_data.get('Percentage_NM_A', '')}</td>
+                        <th>Percentage NM B</th><td>{primer_data.get('Percentage_NM_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Degenerescence A</th><td>{primer_data.get('Degenerescence_A', '')}</td>
+                        <th>Degenerescence B</th><td>{primer_data.get('Degenerescence_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Tm A Max</th><td>{primer_data.get('Tm_A_max', '')}</td>
+                        <th>Tm B Max</th><td>{primer_data.get('Tm_B_max', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Tm A Min</th><td>{primer_data.get('Tm_A_min', '')}</td>
+                        <th>Tm B Min</th><td>{primer_data.get('Tm_B_min', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>GC Percentage Fraction A</th><td>{primer_data.get('GC_percentage_fraction_A', '')}</td>
+                        <th>GC Percentage Fraction B</th><td>{primer_data.get('GC_percentage_fraction_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>GC in Last 30% A</th><td>{primer_data.get('GC_in_last_thirty_percent_A', '')}</td>
+                        <th>GC in Last 30% B</th><td>{primer_data.get('GC_in_last_thirty_percent_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Ends with T A</th><td>{primer_data.get('Ends_with_T_A', '')}</td>
+                        <th>Ends with T B</th><td>{primer_data.get('Ends_with_T_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>GC Clamp A</th><td>{primer_data.get('GC_clamp_A', '')}</td>
+                        <th>GC Clamp B</th><td>{primer_data.get('GC_clamp2', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>Reverse Complement A</th><td>-</td>
+                        <th>Reverse Complement B</th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
+                    </tr>
+                    <tr>
+                        <th>GC Clamp RC A</th><td>-</td>
+                        <th>GC Clamp RC B</th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
+                    </tr>
+                </table>
+                
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="container{chart_id_prefix}"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="container{gc_chart_id_prefix}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        """
 
-    # x-range
+        all_content_blocks += content_block
+
+    # Add the X-range chart for Primer Position
     og_ids = df['OG_ID'].unique()
     primer_colors = ['#277da1', '#577590', '#4d908e', '#43aa8b', '#90be6d', '#f9c74f', '#f9844a', '#f8961e', '#f3722c', '#f94144']
-    highcharts_scripts_xrange = []
-
+    xrange_scripts = ""
+    
     for og_id in og_ids:
         og_data = df[df['OG_ID'] == og_id]
         alignment_size = og_data['Alignement_size'].iloc[0]
@@ -286,74 +414,68 @@ if __name__ == "__main__":
                 'Position_B': row['Position_B'],
                 'Primer_Size_B': row['Primer_Size_B']
             })
-        script = generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors)
-        highcharts_scripts_xrange.append(script)
+        xrange_scripts += generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors) + "\n"
 
-    # Template HTML
     html_template = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Visualisation of primers metrics</title>
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/xrange.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-        <style>
-            body {{
-                text-align: center; 
-            }}
-            h1, h2 {{
-                text-align: center; 
-            }}
-            .highcharts-figure {{
-                min-width: 310px;
-                max-width: 800px;
-                margin: 1em auto; 
-            }}
-            #container {{
-                height: 300px;
-            }}
-        </style>
-    </head>
-    <body>
-    <h1>Visualisation of primers metrics</h1>
-    <!-- Graphiques linéaires -->
-    <h2>1. Degeneracy</h2>
-    <figure class="highcharts-figure">
-        <div id="containerA"></div>
-        <p class="highcharts-description">Forward</p>
-    </figure>
-    <figure class="highcharts-figure">
-        <div id="containerB"></div>
-        <p class="highcharts-description">Reverse</p>
-    </figure>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of Primer Metrics</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }}
+        .content-wrapper {{
+            border: 2px solid black;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 50px;
+            width: 90%;
+        }}
+        .table-chart-container {{
+            display: flex;
+        }}
+        table {{
+            width: 50%;  
+            font-size: 12px;
+            margin: 10px;
+            border-collapse: collapse;
+        }}
+        table, th, td {{
+            border: 1px solid black;
+        }}
+        th, td {{
+            padding: 10px;
+            text-align: left;
+        }}
+        .chart-container {{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 50%; 
+            margin-left: 10px;
+        }}
+        .chart-column {{
+            width: 100%;
+            height: 400px;
+        }}
+    </style>
+</head>
+<body>
+    <h1>Primer Visualization</h1>
 
-    <h2>2. GC Content</h2>
-    <figure class="highcharts-figure">
-        <div id="containerA_GC"></div>
-        <p class="highcharts-description">Forward</p>
-    </figure>
-    <figure class="highcharts-figure">
-        <div id="containerB_GC"></div>
-        <p class="highcharts-description">Reverse</p>
-    </figure>
+    {all_content_blocks}
 
-    <figure class="highcharts-figure">
-        <div id="containerA_GC_Max"></div>
-        <p class="highcharts-description">Forward</p>
-    </figure>
-    <figure class="highcharts-figure">
-        <div id="containerB_GC_Max"></div>
-        <p class="highcharts-description">Reverse</p>
-    </figure>
-
-    <!-- Graphiques X-range -->
-    <h2>3. Primer Position</h2>
-    {''.join(f'<figure class="highcharts-figure"><div id="container_{og_id}"></div><p class="highcharts-description">Graphique pour {og_id}</p></figure>' for og_id in og_ids)}
+    <!-- X-range -->
+    <h2>Primer Position</h2>
+    {''.join(f'<div id="container_xrange_{og_id}"></div>' for og_id in og_ids)}
 
     <script>
         (function(H) {{
@@ -376,30 +498,24 @@ if __name__ == "__main__":
                                     series
                             )
                         );
-                     }}
+                    }}
                 }});
+
                 H.fireEvent(this, 'afterGetAllItems', {{ allItems: allItems }});
+
                 return allItems;
             }}
         }})(Highcharts);
 
-        {highcharts_script_A}
-        {highcharts_script_B_reverse}
-        {highcharts_script_A_gc}
-        {highcharts_script_B_reverse_gc}
-        {highcharts_script_A_gc_max}
-        {highcharts_script_B_reverse_gc_max}
-
-        {''.join(script for script in highcharts_scripts_xrange)}
+        {all_chart_scripts}
+        {xrange_scripts}
     </script>
-    </body>
-    </html>
-    """
+</body>
+</html>
+"""
 
+    # Write to the output file
+    with open(args.output, 'w') as f:
+        f.write(html_template)
 
-    with open(args.output, 'w') as file:
-        file.write(html_template)
-
-    print(f"{args.output} file generated successfully.")
-
-
+    print(f"HTML file generated: {args.output}")

@@ -1,6 +1,16 @@
+#!/usr/bin/env python
+
 import pandas as pd
 import json
 import argparse
+
+__author__ = 'Gabryelle Agoutin - INRAE'
+__copyright__ = 'Copyright (C) 2024 INRAE'
+__license__ = 'GNU General Public License'
+__version__ = '1.0'
+__email__ = 'gabryelle.agoutin@inrae.fr'
+__status__ = 'prod'
+
 
 def read_primers_from_table(filename):
     df = pd.read_csv(filename, delimiter='\t')
@@ -43,7 +53,7 @@ Highcharts.chart('container{chart_id_prefix}', {{
     }},
     yAxis: [{{
         title: {{
-            text: 'Degeneracy Level',
+            text: 'Forward Primer Degeneracy Level',
             align: 'middle',
             rotation: 270,
             margin: 40
@@ -63,7 +73,7 @@ Highcharts.chart('container{chart_id_prefix}', {{
         offset: 0
     }}, {{
         title: {{
-            text: 'Degeneracy Level',
+            text: 'Reverse Primer Degeneracy Level',
             align: 'middle',
             rotation: 270,
             margin: 40
@@ -97,10 +107,12 @@ Highcharts.chart('container{chart_id_prefix}', {{
     series: [{{
         name: 'Forward Primer',
         data: {json.dumps(series_A)},
+        color: '#B33F62',  // Color for the Forward Primer curve
         yAxis: 0
     }}, {{
         name: 'Reverse Primer',
         data: {json.dumps(series_B)},
+        color: '#F0B64E',  // Color for the Reverse Primer curve
         yAxis: 1
     }}]
 }});
@@ -195,10 +207,12 @@ Highcharts.chart('container{chart_id_prefix}', {{
     series: [{{
         name: 'Forward Primer',
         data: {json.dumps(series_A)},
+        color: '#B33F62',  // Color for the Forward Primer curve
         yAxis: 0
     }}, {{
         name: 'Reverse Primer',
         data: {json.dumps(series_B)},
+        color: '#F0B64E',  // Color for the Reverse Primer curve
         yAxis: 1
     }}]
 }});
@@ -222,7 +236,7 @@ def generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors):
         end_pos_B = pos_B + primer_size_B
 
         series_data.append({
-            'name': f'Primer pair {primer["Index"]}',
+            'name': f'Primer {primer["Index"]}',
             'data': [
                 {'x': pos_A, 'x2': end_pos_A, 'y': 0, 'color': color},
                 {'x': pos_B, 'x2': end_pos_B, 'y': 1, 'color': color}
@@ -288,7 +302,7 @@ if __name__ == "__main__":
         all_chart_scripts += split_chart_script + "\n" + split_gc_content_script + "\n"
 
         # Add a title for each pair of primers (Primer Pair 1, Primer Pair 2, etc.)
-        pair_title = f"Primer pair {index + 1}"
+        pair_title = f"Primer Pair {index + 1}"
 
         content_block = f"""
         <h2>{pair_title}</h2>  <!-- Adding dynamic title for each primer pair -->
@@ -296,84 +310,85 @@ if __name__ == "__main__":
             <div class="table-chart-container">
                 <table>
                     <tr>
-                        <th colspan="2">OG ID</th>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
                         <td colspan="2">{primer_data.get('OG_ID', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">Gene Name</th>
+                        <th colspan="2" class="header">Gene Name</th>
                         <td colspan="2">{primer_data.get('GeneName', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">Potential Amplicon Size</th>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
                         <td colspan="2">{primer_data.get('potential_amplicon_size', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">TxMk Score</th>
+                        <th colspan="2" class="header">Total Score</th>
                         <td colspan="2">{primer_data.get('Total_score', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">Min Size Amplicon</th>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
                         <td colspan="2">{primer_data.get('min_size_amplicon', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">Max Size Amplicon</th>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
                         <td colspan="2">{primer_data.get('max_size_amplicon', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2" style="text-align: center;">Forward Primer</th>
-                        <th colspan="2" style="text-align: center;">Reverse Primer</th>
+                        <!-- Adding background color to Forward and Reverse Primer cells -->
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
                     </tr>
                     <tr>
-                        <th>sequence</th><td>{primer_data.get('Primer_A', '')}</td>
-                        <th>sequence</th><td>{primer_data.get('Primer_B', '')}</td>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>{primer_data.get('Primer_A', '')}</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>{primer_data.get('Primer_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Position</th><td>{primer_data.get('Position_A', '')}</td>
-                        <th>Position</th><td>{primer_data.get('Position_B', '')}</td>
+                        <th class="forward-primer-header">Position</th><td>{primer_data.get('Position_A', '')}</td>
+                        <th class="reverse-primer-header">Position</th><td>{primer_data.get('Position_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Number Matching</th><td>{primer_data.get('Number_matching_A', '')}</td>
-                        <th>Number Matching</th><td>{primer_data.get('Number_matching_B', '')}</td>
+                        <th class="forward-primer-header">Number Matching</th><td>{primer_data.get('Number_matching_A', '')}</td>
+                        <th class="reverse-primer-header">Number Matching</th><td>{primer_data.get('Number_matching_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Percentage NM</th><td>{primer_data.get('Percentage_NM_A', '')}</td>
-                        <th>Percentage NM</th><td>{primer_data.get('Percentage_NM_B', '')}</td>
+                        <th class="forward-primer-header">Percentage Number Matching</th><td>{primer_data.get('Percentage_NM_A', '')}</td>
+                        <th class="reverse-primer-header">Percentage Number Matching</th><td>{primer_data.get('Percentage_NM_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Degenerescence</th><td>{primer_data.get('Degenerescence_A', '')}</td>
-                        <th>Degenerescence</th><td>{primer_data.get('Degenerescence_B', '')}</td>
+                        <th class="forward-primer-header">Degenerescence</th><td>{primer_data.get('Degenerescence_A', '')}</td>
+                        <th class="reverse-primer-header">Degenerescence</th><td>{primer_data.get('Degenerescence_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Tm Max (°C)</th><td>{primer_data.get('Tm_A_max', '')}</td>
-                        <th>Tm Max (°C)</th><td>{primer_data.get('Tm_B_max', '')}</td>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>{primer_data.get('Tm_A_max', '')}</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>{primer_data.get('Tm_B_max', '')}</td>
                     </tr>
                     <tr>
-                        <th>Tm Min (°C)</th><td>{primer_data.get('Tm_A_min', '')}</td>
-                        <th>Tm Min (°C)</th><td>{primer_data.get('Tm_B_min', '')}</td>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>{primer_data.get('Tm_A_min', '')}</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>{primer_data.get('Tm_B_min', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_A', '')}</td>
-                        <th>GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_B', '')}</td>
+                        <th class="forward-primer-header">GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_A', '')}</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_A', '')}</td>
-                        <th>GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_B', '')}</td>
+                        <th class="forward-primer-header">GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_A', '')}</td>
+                        <th class="reverse-primer-header">GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Ends with T </th><td>{primer_data.get('Ends_with_T_A', '')}</td>
-                        <th>Ends with T </th><td>{primer_data.get('Ends_with_T_B', '')}</td>
+                        <th class="forward-primer-header">Ends with T</th><td>{primer_data.get('Ends_with_T_A', '')}</td>
+                        <th class="reverse-primer-header">Ends with T</th><td>{primer_data.get('Ends_with_T_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Clamp </th><td>{primer_data.get('GC_clamp_A', '')}</td>
-                        <th>GC Clamp </th><td>{primer_data.get('GC_clamp2', '')}</td>
+                        <th class="forward-primer-header">GC Clamp present</th><td>{primer_data.get('GC_clamp_A', '')}</td>
+                        <th class="reverse-primer-header">GC Clamp present</th><td>{primer_data.get('GC_clamp2', '')}</td>
                     </tr>
                     <tr>
-                        <th>Reverse Complement </th><td>-</td>
-                        <th>Reverse Complement </th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
+                        <th class="forward-primer-header">Reverse Complement</th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement</th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Clamp RC </th><td>-</td>
-                        <th>GC Clamp RC </th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
+                        <th class="forward-primer-header">GC Clamp RC</th><td>-</td>
+                        <th class="reverse-primer-header">GC Clamp RC</th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
                     </tr>
                 </table>
                 
@@ -459,6 +474,21 @@ if __name__ == "__main__":
         .chart-column {{
             width: 100%;
             height: 400px;
+        }}
+        /* Styling the background color for Forward and Reverse Primer */
+        .forward-primer-header {{
+            background-color: rgba(179, 63, 98, 0.5);  /* Background color for Forward Primer */
+            color: black;  /* Text color */
+        }}
+
+        .reverse-primer-header {{
+            background-color: rgba(240, 182, 78, 0.5);  /* Background color for Reverse Primer */
+            color: black;  /* Text color */
+        }}
+
+        .header {{
+            background-color: rgba(166, 166, 166, 0.5);  /* Background color for Reverse Primer */
+            color: black;  /* Text color */
         }}
     </style>
 </head>

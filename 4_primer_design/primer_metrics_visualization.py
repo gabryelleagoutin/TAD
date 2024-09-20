@@ -1,16 +1,6 @@
-#!/usr/bin/env python
-
 import pandas as pd
 import json
 import argparse
-
-__author__ = 'Gabryelle Agoutin - INRAE'
-__copyright__ = 'Copyright (C) 2024 INRAE'
-__license__ = 'GNU General Public License'
-__version__ = '1.0'
-__email__ = 'gabryelle.agoutin@inrae.fr'
-__status__ = 'prod'
-
 
 def read_primers_from_table(filename):
     df = pd.read_csv(filename, delimiter='\t')
@@ -53,7 +43,7 @@ Highcharts.chart('container{chart_id_prefix}', {{
     }},
     yAxis: [{{
         title: {{
-            text: 'Forward Primer Degeneracy Level',
+            text: 'Degeneracy Level',
             align: 'middle',
             rotation: 270,
             margin: 40
@@ -73,7 +63,7 @@ Highcharts.chart('container{chart_id_prefix}', {{
         offset: 0
     }}, {{
         title: {{
-            text: 'Reverse Primer Degeneracy Level',
+            text: 'Degeneracy Level',
             align: 'middle',
             rotation: 270,
             margin: 40
@@ -232,7 +222,7 @@ def generate_xrange_chart_script(og_id, alignment_size, primers, primer_colors):
         end_pos_B = pos_B + primer_size_B
 
         series_data.append({
-            'name': f'Primer {primer["Index"]}',
+            'name': f'Primer pair {primer["Index"]}',
             'data': [
                 {'x': pos_A, 'x2': end_pos_A, 'y': 0, 'color': color},
                 {'x': pos_B, 'x2': end_pos_B, 'y': 1, 'color': color}
@@ -297,7 +287,11 @@ if __name__ == "__main__":
 
         all_chart_scripts += split_chart_script + "\n" + split_gc_content_script + "\n"
 
+        # Add a title for each pair of primers (Primer Pair 1, Primer Pair 2, etc.)
+        pair_title = f"Primer pair {index + 1}"
+
         content_block = f"""
+        <h2>{pair_title}</h2>  <!-- Adding dynamic title for each primer pair -->
         <div class="content-wrapper">
             <div class="table-chart-container">
                 <table>
@@ -314,7 +308,7 @@ if __name__ == "__main__":
                         <td colspan="2">{primer_data.get('potential_amplicon_size', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2">Total Score</th>
+                        <th colspan="2">TxMk Score</th>
                         <td colspan="2">{primer_data.get('Total_score', '')}</td>
                     </tr>
                     <tr>
@@ -326,60 +320,60 @@ if __name__ == "__main__":
                         <td colspan="2">{primer_data.get('max_size_amplicon', '')}</td>
                     </tr>
                     <tr>
-                        <th colspan="2" style="text-align: center;">Primer A</th>
-                        <th colspan="2" style="text-align: center;">Primer B</th>
+                        <th colspan="2" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" style="text-align: center;">Reverse Primer</th>
                     </tr>
                     <tr>
-                        <th>Primer A</th><td>{primer_data.get('Primer_A', '')}</td>
-                        <th>Primer B</th><td>{primer_data.get('Primer_B', '')}</td>
+                        <th>sequence</th><td>{primer_data.get('Primer_A', '')}</td>
+                        <th>sequence</th><td>{primer_data.get('Primer_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Position A</th><td>{primer_data.get('Position_A', '')}</td>
-                        <th>Position B</th><td>{primer_data.get('Position_B', '')}</td>
+                        <th>Position</th><td>{primer_data.get('Position_A', '')}</td>
+                        <th>Position</th><td>{primer_data.get('Position_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Number Matching A</th><td>{primer_data.get('Number_matching_A', '')}</td>
-                        <th>Number Matching B</th><td>{primer_data.get('Number_matching_B', '')}</td>
+                        <th>Number Matching</th><td>{primer_data.get('Number_matching_A', '')}</td>
+                        <th>Number Matching</th><td>{primer_data.get('Number_matching_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Percentage NM A</th><td>{primer_data.get('Percentage_NM_A', '')}</td>
-                        <th>Percentage NM B</th><td>{primer_data.get('Percentage_NM_B', '')}</td>
+                        <th>Percentage NM</th><td>{primer_data.get('Percentage_NM_A', '')}</td>
+                        <th>Percentage NM</th><td>{primer_data.get('Percentage_NM_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Degenerescence A</th><td>{primer_data.get('Degenerescence_A', '')}</td>
-                        <th>Degenerescence B</th><td>{primer_data.get('Degenerescence_B', '')}</td>
+                        <th>Degenerescence</th><td>{primer_data.get('Degenerescence_A', '')}</td>
+                        <th>Degenerescence</th><td>{primer_data.get('Degenerescence_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Tm A Max</th><td>{primer_data.get('Tm_A_max', '')}</td>
-                        <th>Tm B Max</th><td>{primer_data.get('Tm_B_max', '')}</td>
+                        <th>Tm Max (°C)</th><td>{primer_data.get('Tm_A_max', '')}</td>
+                        <th>Tm Max (°C)</th><td>{primer_data.get('Tm_B_max', '')}</td>
                     </tr>
                     <tr>
-                        <th>Tm A Min</th><td>{primer_data.get('Tm_A_min', '')}</td>
-                        <th>Tm B Min</th><td>{primer_data.get('Tm_B_min', '')}</td>
+                        <th>Tm Min (°C)</th><td>{primer_data.get('Tm_A_min', '')}</td>
+                        <th>Tm Min (°C)</th><td>{primer_data.get('Tm_B_min', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Percentage Fraction A</th><td>{primer_data.get('GC_percentage_fraction_A', '')}</td>
-                        <th>GC Percentage Fraction B</th><td>{primer_data.get('GC_percentage_fraction_B', '')}</td>
+                        <th>GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_A', '')}</td>
+                        <th>GC Percentage Fraction</th><td>{primer_data.get('GC_percentage_fraction_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC in Last 30% A</th><td>{primer_data.get('GC_in_last_thirty_percent_A', '')}</td>
-                        <th>GC in Last 30% B</th><td>{primer_data.get('GC_in_last_thirty_percent_B', '')}</td>
+                        <th>GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_A', '')}</td>
+                        <th>GC in Last 30%</th><td>{primer_data.get('GC_in_last_thirty_percent_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>Ends with T A</th><td>{primer_data.get('Ends_with_T_A', '')}</td>
-                        <th>Ends with T B</th><td>{primer_data.get('Ends_with_T_B', '')}</td>
+                        <th>Ends with T </th><td>{primer_data.get('Ends_with_T_A', '')}</td>
+                        <th>Ends with T </th><td>{primer_data.get('Ends_with_T_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Clamp A</th><td>{primer_data.get('GC_clamp_A', '')}</td>
-                        <th>GC Clamp B</th><td>{primer_data.get('GC_clamp2', '')}</td>
+                        <th>GC Clamp </th><td>{primer_data.get('GC_clamp_A', '')}</td>
+                        <th>GC Clamp </th><td>{primer_data.get('GC_clamp2', '')}</td>
                     </tr>
                     <tr>
-                        <th>Reverse Complement A</th><td>-</td>
-                        <th>Reverse Complement B</th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
+                        <th>Reverse Complement </th><td>-</td>
+                        <th>Reverse Complement </th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
                     </tr>
                     <tr>
-                        <th>GC Clamp RC A</th><td>-</td>
-                        <th>GC Clamp RC B</th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
+                        <th>GC Clamp RC </th><td>-</td>
+                        <th>GC Clamp RC </th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
                     </tr>
                 </table>
                 

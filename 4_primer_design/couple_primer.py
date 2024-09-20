@@ -57,11 +57,6 @@ def count_gc_in_last_thirty_percent(sequence):
     
     return gc_count
 
-def has_single_gc_clamp(sequence):
-    '''Function to check if the sequence has a single GC clamp'''
-    last_six_bases = sequence[-6:]
-    return (last_six_bases.count('G') + last_six_bases.count('C')) == 1
-
 def amplicon_score(amplicon_size, amplicon_min_size):
     '''Calculate a score for the amplicon size based on the size.'''
     return round(((amplicon_size - amplicon_min_size) / 22), 2)
@@ -100,16 +95,15 @@ def process_files(input_files, alignment_folder, amplicon_min_size, amplicon_max
                 og_id = get_og_id(primers[i]['OG_ID'])
                 alignment_size = get_alignment_size(og_id, alignment_folder)
                 reverse_complement_B = str(Seq(primer2_info[5]).reverse_complement())
-                gc_clamp_RC_B = has_single_gc_clamp(reverse_complement_B)
                 gc_last_thirty_percent_RC_B = count_gc_in_last_thirty_percent(reverse_complement_B)
                 primer_pair = '\t'.join(
                     [primers[i]['OG_ID'], primers[i]['NumberOfSeq'], primers[i]['SpeciesCount'], primers[i]['PercentSingleCopy'],
                      primers[i]['GeneName'], str(alignment_size)] + primer1_info.split('\t')[5:] +
-                    primer2_info[5:] + [reverse_complement_B, str(gc_clamp_RC_B), str(gc_last_thirty_percent_RC_B), str(potential_amplicon_size), str(amplicon_size_score), str(total_score)])
+                    primer2_info[5:] + [reverse_complement_B, str(gc_last_thirty_percent_RC_B), str(potential_amplicon_size), str(amplicon_size_score), str(total_score)])
                 all_primer_pairs.append(primer_pair + '\n')
 
     if all_primer_pairs:
-        header = "OG_ID\tNumberOfSeq\tSpeciesCount\tPercentSingleCopy\tGeneName\tAlignement_size\tPrimer_A\tPosition_A\tPrimer_Size_A\tNumber_matching_A\tPercentage_NM_A\tScore_Percentage_NM_A\tDegenerescence_A\tTm_A_max\tTm_A_min\tGC_percentage_fraction_A\tGC_percentage_max_A\tGC_percentage_min_A\tGC_in_last_thirty_percent_A\tEnds_with_T_A\tSelf_Complementarity_A\tGC_clamp_A\tPrimer_B\tPosition_B\tPrimer_Size_B\tNumber_matching_B\tPercentage_NM_B\tScore_Percentage_NM_B\tDegenerescence_B\tTm_B_max\tTm_B_min\tGC_percentage_fraction_B\tGC_percentage_max_B\tGC_percentage_min_B\tGC_in_last_thirty_percent_B\tEnds_with_T_B\tSelf_Complementarity_B\tGC_clamp2\tReverse_Complement_B\tGC_clamp_RC_B\tGC_last_trhity_percent_RC_B\tpotential_amplicon_size\tAmplicon_score\tTotal_score"
+        header = "OG_ID\tNumberOfSeq\tSpeciesCount\tPercentSingleCopy\tGeneName\tAlignement_size\tPrimer_A\tPosition_A\tPrimer_Size_A\tNumber_matching_A\tPercentage_NM_A\tScore_Percentage_NM_A\tDegenerescence_A\tTm_A_max\tTm_A_min\tGC_percentage_fraction_A\tGC_percentage_max_A\tGC_percentage_min_A\tGC_in_last_thirty_percent_A\tEnds_with_T_A\tSelf_Complementarity_A\tGC_clamp_A\tPrimer_B\tPosition_B\tPrimer_Size_B\tNumber_matching_B\tPercentage_NM_B\tScore_Percentage_NM_B\tDegenerescence_B\tTm_B_max\tTm_B_min\tGC_percentage_fraction_B\tGC_percentage_max_B\tGC_percentage_min_B\tGC_in_last_thirty_percent_B\tEnds_with_T_B\tSelf_Complementarity_B\tGC_clamp2\tReverse_Complement_B\tGC_last_trhity_percent_RC_B\tpotential_amplicon_size\tAmplicon_score\tTotal_score"
         with open(output_file, 'w') as out_file:
             out_file.write(header + '\n')
             for pair in all_primer_pairs:
@@ -159,11 +153,10 @@ Columns in the output file:
     - $37 Self_Complementarity_B   
     - $38 GC_clamp2       
     - $39 Reverse_Complement_B: reverse complement primer for in silico pcr 
-    - $40 GC_clamp_RC_B   
-    - $41 GC_last_trhity_percent_RC_B 
-    - $42 potential_amplicon_size: amplicon size between the two primers
-    - $43 Amplicon_score: +1 every 22 bases (amplicon_size - amplicon_min_size) / 22
-    - $44 Total_score: Score_Percentage_NM the lowest score of Score_Percentage_NM + the amplicon_score. We take the weakest base, because that's the one that would catch the most primers.""", formatter_class=argparse.RawTextHelpFormatter,
+    - $40 GC_last_trhity_percent_RC_B 
+    - $41 potential_amplicon_size: amplicon size between the two primers
+    - $42 Amplicon_score: +1 every 22 bases (amplicon_size - amplicon_min_size) / 22
+    - $43 Total_score: Score_Percentage_NM the lowest score of Score_Percentage_NM + the amplicon_score. We take the weakest base, because that's the one that would catch the most primers.""", formatter_class=argparse.RawTextHelpFormatter,
     epilog="python couple_primer.py -i $file -f alignment/ --amplicon_min_size 150 --amplicon_max_size 590")
     parser.add_argument("-i", "--input_files", nargs='+', help="Paths to the input TSV files")
     parser.add_argument('-f', '--alignment_folder', type=str, required=True, help='The folder containing alignment files')

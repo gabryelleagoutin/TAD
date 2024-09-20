@@ -386,10 +386,6 @@ if __name__ == "__main__":
                         <th class="forward-primer-header">Reverse Complement</th><td>-</td>
                         <th class="reverse-primer-header">Reverse Complement</th><td>{primer_data.get('Reverse_Complement_B', '')}</td>
                     </tr>
-                    <tr>
-                        <th class="forward-primer-header">GC Clamp RC</th><td>-</td>
-                        <th class="reverse-primer-header">GC Clamp RC</th><td>{primer_data.get('GC_clamp_RC_B', '')}</td>
-                    </tr>
                 </table>
                 
                 <div class="chart-container">

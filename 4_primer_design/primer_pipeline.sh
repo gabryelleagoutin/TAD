@@ -131,7 +131,7 @@ sbatch --wait <<-EOF
 #SBATCH -c 3
 #SBATCH --mail-type=BEGIN,END,FAIL
 module load devel/python/Python-3.11.1
-python process_primers_stat.py -i degeprime_result/concatenated_* -og ../3_fasta_recovery/updated_OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 65 -tm_min 54
+python process_primers_stat.py -i degeprime_result/concatenated_* -og ../3_fasta_recovery/updated_OG_1760_selected.tab -o result_stat_primers -nm 80 -tm_max 65 -tm_min 54
 EOF
 echo "Step 6 completed"
 
@@ -168,10 +168,10 @@ header_file="header.tsv"
 cat $(grep -L '^$' result_stat_primers/*_primer_couple.tsv) > $combined_results_file
 head -n 1 $combined_results_file > $header_file
 sed -i '1!{/^OG_ID/d;}' $combined_results_file
-sort -t$'\t' -k44,44nr $combined_results_file > sorted_data.tsv
-top_scores=$(awk -F'\t' '{print $44}' sorted_data.tsv | sort -nr | uniq | head -n 3)
+sort -t$'\t' -k43,43nr $combined_results_file > sorted_data.tsv
+top_scores=$(awk -F'\t' '{print $43}' sorted_data.tsv | sort -nr | uniq | head -n 3)
 pattern=$(echo $top_scores | tr ' ' '|')
-awk -v pattern="$pattern" -F'\t' 'NR==1; NR>1 && $44 ~ pattern' sorted_data.tsv > $filtered_results_file
+awk -v pattern="$pattern" -F'\t' 'NR==1; NR>1 && $43 ~ pattern' sorted_data.tsv > $filtered_results_file
 cat $header_file $filtered_results_file > $sorted_results_file
 rm sorted_data.tsv $combined_results_file $header_file
 

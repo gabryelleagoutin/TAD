@@ -21,19 +21,19 @@ def process_file_tsv(file_path):
     '''Function to process a TSV file and yield its content'''
     with open(file_path, 'r') as file:
         reader = csv.reader(file, delimiter='\t')
-        header = next(reader) 
+        header = next(reader)  # Ignorer l'en-tête
         for line in reader:
-            yield line # return line by line
+            yield line
 
 def calculate_gc_percentage_with_degeneracy(sequence):
     '''Function to calculate GC percentage considering base degeneracy'''
-    base_deg = {'G': 1, 'C': 1, 'S': 1, 'R': 0.5, 'Y': 0.5, 'K': 0.5, 'M': 0.5, 'B': 0.667, 'V': 0.667, 'D': 0.333, 'H': 0.333, 'N': 0.25}
+    base_deg = {'G': 1, 'C': 1, 'S': 1, 'R': 0.5, 'Y': 0.5, 'K': 0.5, 'M': 0.5, 'B': 0.667, 'V': 0.667, 'D': 0.333, 'H': 0.333, 'N': 0.5}
 
     gc_count = sum(base_deg.get(base, 0) for base in sequence)
     total_bases = len(sequence)
 
     gc_percentage = gc_count / total_bases if total_bases > 0 else 0.0
-    return round(gc_percentage, 2)
+    return round((gc_percentage)*100, 2)
 
 def calculate_gc_percentage_max(sequence):
     '''Function to calculate maximum GC percentage'''
@@ -43,7 +43,7 @@ def calculate_gc_percentage_max(sequence):
     total_bases = len(sequence)
 
     gc_percentage = gc_count / total_bases if total_bases > 0 else 0.0
-    return round(gc_percentage, 2)
+    return round((gc_percentage)*100, 2)
 
 def calculate_gc_percentage_min(sequence):
     '''Function to calculate minimum GC percentage'''
@@ -51,7 +51,7 @@ def calculate_gc_percentage_min(sequence):
     total_bases = len(sequence)
 
     gc_percentage = gc_count / total_bases if total_bases > 0 else 0.0
-    return round(gc_percentage, 2)
+    return round((gc_percentage)*100, 2)
 
 def percent_NM(number_matching, number_of_seq):
     '''percentage matching sequence'''
@@ -76,11 +76,21 @@ def count_gc_in_last_thirty_percent(sequence):
 
     return gc_count
 
-def has_single_gc_clamp(sequence):
-    '''Function to check if the sequence has a single GC clamp'''
-    last_six_bases = sequence[-6:]
-    return (last_six_bases.count('G') + last_six_bases.count('C')) == 1
-
+def has_single_gc_clamp(sequence, num_bases=5):
+    """
+    Function to check if there is at least one G, C, or S in the last 'num_bases' bases.
+    
+    Parameters:
+    - sequence (str): DNA sequence that may contain degenerate bases.
+    - num_bases (int): The number of bases to check from the end of the sequence (default is 5).
+    
+    Returns:
+    - bool: True if there is a GC clamp (at least one G, C, or S), False otherwise.
+    """
+    last_bases = sequence[-num_bases:]
+    return any(base in ['G', 'C', 'S'] for base in last_bases)
+    
+    
 def ends_with_t(sequence):
     '''Function to check if the sequence ends with T'''
     return sequence[-1] == 'T'
@@ -131,7 +141,7 @@ def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min
     ends_with_t_flag = ends_with_t(primer)
     self_complementarity_flag = self_complementarity(primer)
     gc_clamp_flag = has_single_gc_clamp(primer)
-    og_id= str(og_id) #avoir error: invalid literal for int()
+    og_id= str(og_id) # sinon j'ai erreur : invalid literal for int() with base 10: '72971at1578'
     og_data = og_info.get(og_id, {})
     number_of_seq = og_data.get("NumberOfSeq", "")
     percentage_nm = percent_NM(int(number_matching), int(number_of_seq))

@@ -6,6 +6,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=2_gnu
+  - argtable2=2.13=hd590300_1004
   - arpack=3.9.1=nompi_h77f6705_101
   - biopython=1.84=py311h331c9d8_0
   - bottleneck=1.4.0=py311h9f3472d_2
@@ -16,6 +17,7 @@ dependencies:
   - ca-certificates=2024.8.30=hbcca054_0
   - certifi=2024.8.30=pyhd8ed1ab_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
+  - clustalo=1.2.4=hdbdd923_8
   - contourpy=1.3.0=py311hd18a35c_1
   - cycler=0.12.1=pyhd8ed1ab_0
   - cyrus-sasl=2.1.28=h52b45da_1
@@ -131,3 +133,4 @@ dependencies:
   - xz=5.4.6=h5eee18b_1
   - zlib=1.2.13=h4ab18f5_6
   - zstd=1.5.6=ha6fb4c9_0
+prefix: /home/gagoutin/.conda/envs/TaxonMarker_swarm

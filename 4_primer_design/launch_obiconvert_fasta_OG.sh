@@ -6,7 +6,9 @@ ml bioinfo/OBITools/1.2.11
 
 # Check if at least two arguments are provided (path to ncbi_tax_dump and at least one FASTA file)
 if [ "$#" -lt 2 ]; then
-  echo "Usage: $0 /path/to/ncbi_tax_dump fasta_file1 [fasta_file2 ...]"
+  echo "Usage: $0 /path/to/ncbi_tax_dump fasta_file1 [fasta_file2 ...] or all fasta *.fa.
+  the best use is to select the OG fastas in the results table. 
+  Formatting is a fairly long process, so select the ones you have rather than formatting them all."
   exit 1
 fi
 

@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import pandas as pd
 
 __author__ = 'Gabryelle Agoutin - INRAE'
 __copyright__ = 'Copyright (C) 2024 INRAE'
@@ -11,6 +10,7 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
+#script written in python 2.7 to be compatible with EcoPCR in the conda environment
 
 
 def find_database_path(og_id, db_paths):
@@ -61,25 +61,32 @@ def run_ecopcr(tsv_file, db_paths):
     tsv_file (str): Path to the TSV file containing primer information.
     db_paths (list of str): List of paths to the formatted ecoPCR databases.
     """
-    # Load the TSV file into a DataFrame
-    df = pd.read_csv(tsv_file, sep='\t')
-    
     min_sizes = []
     max_sizes = []
 
-    # Iterate through each row of the DataFrame
-    for index, row in df.iterrows():
-        og_id = row['OG_ID']
-        primer_a = row['Primer_A']
-        reverse_complement_b = row['Reverse_Complement_B']
+    # Read the TSV file line by line
+    with open(tsv_file, 'r') as f:
+        headers = f.readline().strip().split('\t')
+        rows = [line.strip().split('\t') for line in f]
+
+    # Find indices of relevant columns
+    og_id_idx = headers.index('OG_ID')
+    primer_a_idx = headers.index('Primer_A')
+    reverse_complement_b_idx = headers.index('Reverse_Complement_B')
+
+    # Iterate through each row of the TSV file
+    for index, row in enumerate(rows):
+        og_id = row[og_id_idx]
+        primer_a = row[primer_a_idx]
+        reverse_complement_b = row[reverse_complement_b_idx]
         
         # Find the appropriate database path
         db_path = find_database_path(og_id, db_paths)
         if db_path:
             # Construct the output file name
-            output_file = f"{og_id}_{index + 1}.ecopcr"
-            command = f"ecoPCR -d {db_path}/{og_id} {primer_a} {reverse_complement_b} > {output_file}"
-            print(f"Running: {command}")
+            output_file = "{0}_{1}.ecopcr".format(og_id, index + 1)
+            command = "ecoPCR -d {0}/{1} {2} {3} > {4}".format(db_path, og_id, primer_a, reverse_complement_b, output_file)
+            print("Running: {0}".format(command))
             os.system(command)
 
             # Analyze the output file
@@ -91,22 +98,20 @@ def run_ecopcr(tsv_file, db_paths):
                 min_sizes.append(None)
                 max_sizes.append(None)
         else:
-            print(f"Database for {og_id} not found. Skipping...")
+            print("Database for {0} not found. Skipping...".format(og_id))
             min_sizes.append(None)
             max_sizes.append(None)
 
-    # Add the min and max sizes to the DataFrame
-    df['min_size_amplicon'] = min_sizes
-    df['max_size_amplicon'] = max_sizes
-
-    # Convert columns to integer type (to remove '.0')
-    df['min_size_amplicon'] = df['min_size_amplicon'].fillna(0).astype(int)
-    df['max_size_amplicon'] = df['max_size_amplicon'].fillna(0).astype(int)
-
-    # Save the updated DataFrame to a new TSV file
+    # Write updated TSV with new columns
     output_tsv_file = tsv_file.replace('.tsv', '_updated.tsv')
-    df.to_csv(output_tsv_file, sep='\t', index=False)
-    print(f"Updated TSV file saved as: {output_tsv_file}")
+    with open(output_tsv_file, 'w') as f_out:
+        f_out.write('\t'.join(headers + ['min_size_amplicon', 'max_size_amplicon']) + '\n')
+        for i, row in enumerate(rows):
+            min_size = str(min_sizes[i]) if min_sizes[i] is not None else ''
+            max_size = str(max_sizes[i]) if max_sizes[i] is not None else ''
+            f_out.write('\t'.join(row + [min_size, max_size]) + '\n')
+
+    print("Updated TSV file saved as: {0}".format(output_tsv_file))
 
 
 if __name__ == "__main__":

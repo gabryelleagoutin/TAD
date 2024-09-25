@@ -9,4 +9,5 @@ mkdir ecoPCR_db
 ml devel/Miniconda/Miniconda3
 ml bioinfo/OBITools/1.2.11
 
+mkdir ecoPCR_db/
 obiconvert --fasta filtered_16S.fna --ecopcrdb-output=ecoPCR_db/16S -t /PATH/BD_TaxonMarker/ncbi_tax_dumb/2024-15-04

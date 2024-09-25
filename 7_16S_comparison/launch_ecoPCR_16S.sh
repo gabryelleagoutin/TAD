@@ -7,4 +7,4 @@
 
 module load bioinfo/ecoPCR/1.0.1
 
-ecoPCR -d ecoPCR_db/16S CCTACGGGNGGCWGCAG GACTACHVGGGTATCTAATCC > 16S.ecopcr
+ecoPCR -d ecoPCR_db/16S [PRIMER_FOWARD PRIMER_REVERSE] > 16S.ecopcr

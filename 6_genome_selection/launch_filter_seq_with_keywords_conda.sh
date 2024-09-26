@@ -11,4 +11,4 @@ source $MY_CONDA_PATH
 conda activate TaxonMarker_swarm
 
 
-python filter_seq_with_keywords.py -s $PATH_BD_ECOPCR/name_seq_with_taxo.txt -o filtered_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina g__Fructobacillus -l rejected_clusters.txt
+python filter_seq_with_keywords.py -s $PATH_BD_ECOPCR/name_seq_with_taxo.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Unassigned sp. g__Weissella g__Dellaglioa g__Periweissella g__Convivina g__Fructobacillus

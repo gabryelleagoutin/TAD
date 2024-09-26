@@ -133,4 +133,3 @@ dependencies:
   - xz=5.4.6=h5eee18b_1
   - zlib=1.2.13=h4ab18f5_6
   - zstd=1.5.6=ha6fb4c9_0
-prefix: /home/gagoutin/.conda/envs/TaxonMarker_swarm

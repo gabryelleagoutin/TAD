@@ -7,14 +7,13 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
-
 import os
+import sys
 import logging
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from collections import defaultdict
 from Bio.Seq import Seq
 from subprocess import run
-
 
 def get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
     """Get amplicon sequences from an ecopcr file."""
@@ -39,7 +38,6 @@ def get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
             header = f'{assembly}|seq{assembly_counter[assembly]}'
             yield header, sequence
 
-
 def write_ecopcr_file_seq_to_fasta(ecopcrfile, output_file, add_primer_sequences):
     """Write fasta sequences from an ecopcr file."""
     logging.info(f'Writing sequences in {output_file}')
@@ -47,7 +45,6 @@ def write_ecopcr_file_seq_to_fasta(ecopcrfile, output_file, add_primer_sequences
         for header, seq in get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
             fl.write(f'>{header}\n')
             fl.write(seq + '\n')
-
 
 def parse_taxonomy_file(taxonomy_file):
     taxonomy_dict = {}
@@ -59,7 +56,6 @@ def parse_taxonomy_file(taxonomy_file):
                 taxonomy_info = parts[1].strip()
                 taxonomy_dict[seq_id] = taxonomy_info
     return taxonomy_dict
-
 
 def replace_fasta_headers_and_check_sequences(fasta_file, taxonomy_dict, output_file, log_file):
     valid_nucleotides = set("ACTG")
@@ -108,6 +104,35 @@ def replace_fasta_headers_and_check_sequences(fasta_file, taxonomy_dict, output_
                 fout.write(f">{unique_id}| {taxonomy_dict.get(seq_id, '')}\n")
                 fout.write(f"{seq_str}\n")
 
+def parse_uc_file(uc_file, output_file):
+    """Parse the UC file and output clusters."""
+    clusters = {}
+    with open(uc_file, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue  # Ignore empty lines and comments
+            fields = line.split('\t')
+            record_type = fields[0]
+            
+            if record_type == 'S' or record_type == 'C':
+                # Centroid or singleton
+                centroid_id = fields[8].split('|')[0]
+                if centroid_id not in clusters:
+                    clusters[centroid_id] = []
+            elif record_type == 'H':
+                # Hit assigned to a centroid
+                sequence_id = fields[8].split('|')[0]
+                centroid_id = fields[9].split('|')[0]
+                if centroid_id not in clusters:
+                    clusters[centroid_id] = []
+                clusters[centroid_id].append(sequence_id)
+    
+    # Write the clusters to the output file
+    with open(output_file, 'w') as f:
+        for centroid, sequences in clusters.items():
+            sequences_str = ','.join(sequences)
+            f.write(f"{centroid}\t{sequences_str}\n")
 
 def main():
     parser = ArgumentParser(description="Process EcoPCR output and annotate with taxonomy",
@@ -140,6 +165,7 @@ def main():
         output_file = os.path.join(output_dir, ''.join(os.path.basename(ecopcrfile).split('.')[:-1]) + '.fna')
         write_ecopcr_file_seq_to_fasta(ecopcrfile, output_file, add_primer_sequences=add_primer_sequences)
 
+    # Combine all fasta files into one
     combined_fasta = os.path.join(output_dir, 'all.fna')
     with open(combined_fasta, 'w') as fout:
         for ecopcrfile in ecopcrfiles:
@@ -147,12 +173,27 @@ def main():
             with open(fasta_file, 'r') as fin:
                 fout.write(fin.read())
 
+    # Run vsearch with --uc option
     derep_fasta = os.path.join(output_dir, 'derep.fasta')
-    run(['vsearch', '--derep_fulllength', combined_fasta, '--sizein', '--sizeout', '--output', derep_fasta])
+    uc_file = os.path.join(output_dir, 'output.uc')
+    logging.info('Running vsearch for dereplication')
+    run(['vsearch', '--derep_fulllength', combined_fasta, '--sizein', '--sizeout', '--output', derep_fasta, '--uc', uc_file])
+
+    # Parse the UC file to generate the clusters
+    cluster_output_file = os.path.join(output_dir, 'output_vsearch_cluster.txt')
+    logging.info('Parsing UC file to generate cluster information')
+    parse_uc_file(uc_file, cluster_output_file)
+
+    # Parse taxonomy file
     taxonomy_dict = parse_taxonomy_file(args.taxonomy_file)
     final_output = os.path.join(output_dir, 'all_modified.fna')
     log_file = os.path.join(output_dir, 'invalid_sequences.log')
+
+    # Replace fasta headers and check sequences
+    logging.info('Replacing fasta headers and checking sequences')
     replace_fasta_headers_and_check_sequences(derep_fasta, taxonomy_dict, final_output, log_file)
+
+    logging.info('Processing completed successfully')
 
 if __name__ == '__main__':
     main()

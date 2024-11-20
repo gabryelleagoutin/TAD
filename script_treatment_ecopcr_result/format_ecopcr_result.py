@@ -79,7 +79,7 @@ def replace_fasta_headers_and_check_sequences(fasta_file, taxonomy_dict, output_
                         unique_id = seq_id
                         while unique_id in unique_id_set:
                             id_count[seq_id] += 1
-                            unique_id = f"{seq_id}.{id_count[seq_id]}"
+                            unique_id = f"{seq_id}_{id_count[seq_id]}"
                         unique_id_set.add(unique_id)
                         fout.write(f">{unique_id}| {taxonomy_dict.get(seq_id, '')}\n")
                         fout.write(f"{seq_str}\n")
@@ -99,7 +99,7 @@ def replace_fasta_headers_and_check_sequences(fasta_file, taxonomy_dict, output_
                 unique_id = seq_id
                 while unique_id in unique_id_set:
                     id_count[seq_id] += 1
-                    unique_id = f"{seq_id}.{id_count[seq_id]}"
+                    unique_id = f"{seq_id}_{id_count[seq_id]}"
                 unique_id_set.add(unique_id)
                 fout.write(f">{unique_id}| {taxonomy_dict.get(seq_id, '')}\n")
                 fout.write(f"{seq_str}\n")

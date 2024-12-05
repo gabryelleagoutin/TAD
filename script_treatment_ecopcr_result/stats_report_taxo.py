@@ -12,7 +12,7 @@ import argparse
 import re
 import sys
 
-# Set of ambiguous words to be cleaned up
+# Set of ambiguous words to be cleaned from taxonomies if the `--clean_ambiguous` flag is enabled.
 clean_words_set = {
     'sp.',
     'Unassigned',
@@ -25,7 +25,21 @@ clean_words_set = {
 }
 
 def filter_lines_by_keywords(cluster_file, include_keywords=None, exclude_keywords=None, clean_ambiguous=False, all_species=False, selected_species=False):
-    cluster_pattern = re.compile(r"Cluster (\d+):")
+    """
+    Filter clusters based on inclusion, exclusion, and ambiguous word removal criteria.
+
+    Args:
+        cluster_file (str): Path to the input cluster file.
+        include_keywords (list of str): Keywords required to keep a line (default: None).
+        exclude_keywords (list of str): Keywords causing a line to be excluded (default: None).
+        clean_ambiguous (bool): Remove lines with ambiguous words if True (default: False).
+        all_species (bool): Retain entire cluster if at least one line is valid (default: False).
+        selected_species (bool): Remove clusters with only excluded lines, keep mixed clusters (default: False).
+
+    Returns:
+        tuple: (filtered_clusters, rejected_clusters, all_taxonomies)
+    """
+    cluster_pattern = re.compile(r"Cluster (\d+):") # Compile regex to detect cluster headers (e.g., "Cluster 1:")
     filtered_clusters = []
     rejected_clusters = []
     current_cluster_content = {}
@@ -51,6 +65,8 @@ def filter_lines_by_keywords(cluster_file, include_keywords=None, exclude_keywor
             for seq_id, content in clean_passed_lines.items():
                 parts = content.split("\t")
                 taxonomy = parts[2]
+                
+                # Check if taxonomy contains included keywords and excludes forbidden ones
                 include_match = not include_keywords or any(keyword in taxonomy for keyword in include_keywords)
                 exclude_match = exclude_keywords and any(keyword in taxonomy for keyword in exclude_keywords)
                 if include_match and not exclude_match:
@@ -115,16 +131,37 @@ def filter_lines_by_keywords(cluster_file, include_keywords=None, exclude_keywor
     return filtered_clusters, rejected_clusters, all_taxonomies
 
 def calculate_statistics(filtered_clusters, output_stats_file, output_taxo_file, output_taxo_good_discriminated_file):
-    total_clusters = len(filtered_clusters)
-    good_discrimination = 0
-    bad_discrimination = 0
-    bad_clusters = []
-    unique_taxonomies = set()
-    good_discriminated_taxonomies = set()
-    bad_discriminated_taxonomies = set()
-    taxonomy_good_clusters = {}
-    taxonomy_bad_clusters = {}
+    """
+    Calculate and write statistical information about filtered clusters.
 
+    Args:
+        filtered_clusters (list of tuples): Each tuple contains a cluster ID and its content (a dictionary of sequences).
+        output_stats_file (str): Path to the output file for writing statistical information.
+        output_taxo_file (str): Path to the file for writing all unique taxonomies.
+        output_taxo_good_discriminated_file (str): Path to the file for writing good discriminated taxonomies.
+
+    This function calculates:
+        - Total number of clusters.
+        - Good and bad discriminated clusters based on unique taxonomies in each cluster.
+        - Overlapping taxonomies that are both well and poorly discriminated.
+        - Percentages of good discrimination for clusters and taxonomies.
+
+    Outputs:
+        - A statistics file with detailed information.
+        - Separate files for all unique taxonomies and well-discriminated taxonomies.
+    """
+    
+    # Initialize counters and collections for statistical data
+    total_clusters = len(filtered_clusters)
+    good_discrimination = 0  # Count of clusters with a single unique taxonomy
+    bad_discrimination = 0   # Count of clusters with multiple taxonomies
+    bad_clusters = []        # List of poorly discriminated clusters
+    unique_taxonomies = set()  # All unique taxonomies across clusters
+    good_discriminated_taxonomies = set()  # Taxonomies in well-discriminated clusters
+    bad_discriminated_taxonomies = set()   # Taxonomies in poorly discriminated clusters
+    taxonomy_good_clusters = {}  # Mapping of taxonomies to clusters where they are well discriminated
+    taxonomy_bad_clusters = {}   # Mapping of taxonomies to clusters where they are poorly discriminated
+    
     for cluster, content in filtered_clusters:
         taxonomies = set()
         for line in content.values():
@@ -219,6 +256,17 @@ def generate_html_output(cluster_corrected_file, output_html_file):
         html_file.write("</body></html>\n")
 
 def generate_html_output_from_stats(stats_file, output_html_file):
+    """
+    Generate an HTML file from the corrected cluster file.
+
+    Args:
+        cluster_corrected_file (str): Path to the corrected clusters file (text format).
+        output_html_file (str): Path to the output HTML file.
+
+    This function creates an interactive HTML representation of the clusters, with:
+        - Headers for each cluster.
+        - Links to taxonomy entries on the NCBI Taxonomy Browser.
+    """
     with open(stats_file, 'r') as txt_file, open(output_html_file, 'w') as html_file:
         html_file.write("<html><body>\n")
         for line in txt_file:
@@ -254,7 +302,17 @@ def generate_html_output_from_stats(stats_file, output_html_file):
         html_file.write("</body></html>\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Filter clusters with optional cleaning and all_species or selected_species options.")
+    parser = argparse.ArgumentParser(
+        description="Filter clusters with optional cleaning and all_species or selected_species options.",
+        epilog=(
+            "Example usage:\n\n"
+            "Example 1:\n"
+            "python $PATH_TAXONMARKER/script_treatment_ecopcr_result/stats_report_taxo.py -c cluster.txt -o stats.txt -i f__Lactobacillaceae -e g__Leuconostoc g__Pediococcus g__Oenococcus g__Weissella g__Dellaglioa g__Periweissella g__Convivina g__Fructobacillus g__Holzapfeliella g__Nicoliella -l rejected_clusters.txt -r cluster_corrected.txt --clean_ambiguous --selected_species\n\n"
+            "Example 2:\n"
+            "python $PATH_TAXONMARKER/script_treatment_ecopcr_result/stats_report_taxo.py -c cluster.txt -o stats.txt -l rejected_clusters.txt -r cluster_corrected.txt --clean_ambiguous"
+        ),
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     parser.add_argument("-c", "--cluster_file", type=str, required=True, help="Input file containing cluster information.")
     parser.add_argument("-o", "--output_stats_file", type=str, required=True, help="Output file for the statistics report.")
     parser.add_argument("-r", "--output_corrected_file", type=str, required=True, help="Output file for the filtered clusters.")
@@ -262,8 +320,8 @@ def main():
     parser.add_argument("-e", "--exclude_keywords", type=str, nargs='*', help="Keywords that, if present, will cause a line to be excluded.")
     parser.add_argument("-l", "--log_file", type=str, help="Output file to log rejected clusters (optional).")
     parser.add_argument("--clean_ambiguous", action='store_true', help="Clean clusters based on a predefined dictionary of words.")
-    parser.add_argument("--all_species", action='store_true', help="If set, keeps the entire cluster if it contains at least one valid line.")
-    parser.add_argument("--selected_species", action='store_true', help="If set, removes clusters with only excluded lines but keeps clusters with mixed lines, removing only excluded lines.")
+    parser.add_argument("--all_species", action='store_true', help="If set, keeps the entire cluster if it contains at least one valid line.this option needs to have the -i and/or -e set")
+    parser.add_argument("--selected_species", action='store_true', help="If set, removes clusters with only excluded lines but keeps clusters with mixed lines, removing only excluded lines.this option needs to have the -i and/or -e set")
 
     args = parser.parse_args()
 

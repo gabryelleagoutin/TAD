@@ -428,10 +428,10 @@ if __name__ == "__main__":
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualization of Primer Metrics</title>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/xrange.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/highcharts.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/export-data.js"></script>
     <style>
         body {{
             font-family: Arial, sans-serif;

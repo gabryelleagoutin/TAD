@@ -38,13 +38,23 @@ def get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
             header = f'{assembly}|seq{assembly_counter[assembly]}'
             yield header, sequence
 
-def write_ecopcr_file_seq_to_fasta(ecopcrfile, output_file, add_primer_sequences):
-    """Write fasta sequences from an ecopcr file."""
-    logging.info(f'Writing sequences in {output_file}')
-    with open(output_file, 'w') as fl:
+            
+def write_ecopcr_file_seq_to_fasta_and_genome_list(ecopcrfile, output_fasta, genome_list_file, add_primer_sequences):
+    """Write fasta sequences from an ecopcr file and generate genome list."""
+    logging.info(f'Writing sequences to {output_fasta} and genome list to {genome_list_file}')
+    
+    genome_ids = set()
+    with open(output_fasta, 'w') as fasta_file, open(genome_list_file, 'w') as genome_file:
         for header, seq in get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
-            fl.write(f'>{header}\n')
-            fl.write(seq + '\n')
+            # Write sequence to the FASTA file
+            fasta_file.write(f'>{header}\n')
+            fasta_file.write(seq + '\n')
+            
+            # Extract genome ID and write it to the genome list file
+            genome_id = header.split('|')[0]
+            if genome_id not in genome_ids:
+                genome_ids.add(genome_id)
+                genome_file.write(genome_id + '\n')
 
 def parse_taxonomy_file(taxonomy_file):
     taxonomy_dict = {}
@@ -159,20 +169,26 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     add_primer_sequences = args.add_primer_sequences
-
+    genome_list_file = os.path.join(output_dir, 'genome_list_for_16_comparison.txt')
     for ecopcrfile in ecopcrfiles:
         logging.info(f'Processing {ecopcrfile}')
         output_file = os.path.join(output_dir, ''.join(os.path.basename(ecopcrfile).split('.')[:-1]) + '.fna')
-        write_ecopcr_file_seq_to_fasta(ecopcrfile, output_file, add_primer_sequences=add_primer_sequences)
+        write_ecopcr_file_seq_to_fasta_and_genome_list(ecopcrfile, output_file, genome_list_file, add_primer_sequences=add_primer_sequences)
 
     # Combine all fasta files into one
     combined_fasta = os.path.join(output_dir, 'all.fna')
-    with open(combined_fasta, 'w') as fout:
+    with open(combined_fasta, 'w') as combined_fasta_file, open(genome_list_file, 'w') as genome_file:
+        genome_ids = set()
         for ecopcrfile in ecopcrfiles:
-            fasta_file = os.path.join(output_dir, ''.join(os.path.basename(ecopcrfile).split('.')[:-1]) + '.fna')
-            with open(fasta_file, 'r') as fin:
-                fout.write(fin.read())
+            logging.info(f'Processing {ecopcrfile}')
+            for header, seq in get_seq_from_ecopcr_file(ecopcrfile, add_primer_sequences):
+                combined_fasta_file.write(f'>{header}\n')
+                combined_fasta_file.write(seq + '\n')
 
+                genome_id = header.split('|')[0]
+                if genome_id not in genome_ids:
+                    genome_ids.add(genome_id)
+                    genome_file.write(genome_id + '\n')
     # Run vsearch with --uc option
     derep_fasta = os.path.join(output_dir, 'derep.fasta')
     uc_file = os.path.join(output_dir, 'output.uc')

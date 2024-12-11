@@ -13,21 +13,28 @@ __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
 def validate_file_exists(file_path):
-    '''Function to validate if a file exists'''
+    """Check if a file exists."""
     if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+        raise FileNotFoundError(f"The file {file_path} does not exist.")
 
 def process_file_tsv(file_path):
-    '''Function to process a TSV file and yield its content'''
+    """Process a TSV file and yield its content line by line, skipping the header."""
     with open(file_path, 'r') as file:
         reader = csv.reader(file, delimiter='\t')
-        header = next(reader)  # Ignorer l'en-tête
+        header = next(reader)  # Skip header
         for line in reader:
             yield line
 
 def calculate_gc_percentage_with_degeneracy(sequence):
-    '''Function to calculate GC percentage considering base degeneracy'''
-    base_deg = {'G': 1, 'C': 1, 'S': 1, 'R': 0.5, 'Y': 0.5, 'K': 0.5, 'M': 0.5, 'B': 0.667, 'V': 0.667, 'D': 0.333, 'H': 0.333, 'N': 0.5}
+    """
+    Calculate GC percentage considering degeneracy.
+    Certain degenerate bases are partially GC.
+    """
+    base_deg = {
+        'G': 1, 'C': 1, 'S': 1, 
+        'R': 0.5, 'Y': 0.5, 'K': 0.5, 'M': 0.5,
+        'B': 0.667, 'V': 0.667, 'D': 0.333, 'H': 0.333, 'N': 0.5
+    }
 
     gc_count = sum(base_deg.get(base, 0) for base in sequence)
     total_bases = len(sequence)
@@ -36,26 +43,31 @@ def calculate_gc_percentage_with_degeneracy(sequence):
     return round((gc_percentage)*100, 2)
 
 def calculate_gc_percentage_max(sequence):
-    '''Function to calculate maximum GC percentage'''
+    """
+    Calculate the maximum GC percentage.
+    Consider all degenerate bases that can be GC as GC.
+    """
     allowed_bases = {'G', 'C', 'R', 'Y', 'S', 'K', 'M', 'B', 'V', 'D', 'H', 'N'}
-
     gc_count = sum(1 for base in sequence if base in allowed_bases)
     total_bases = len(sequence)
-
     gc_percentage = gc_count / total_bases if total_bases > 0 else 0.0
     return round((gc_percentage)*100, 2)
 
 def calculate_gc_percentage_min(sequence):
-    '''Function to calculate minimum GC percentage'''
+    """
+    Calculate the minimum GC percentage.
+    Only consider G, C, S as GC.
+    """
     gc_count = sum(1 for base in sequence if base in {'G', 'C', 'S'})
     total_bases = len(sequence)
-
     gc_percentage = gc_count / total_bases if total_bases > 0 else 0.0
     return round((gc_percentage)*100, 2)
 
 def percent_NM(number_matching, number_of_seq):
-    '''percentage matching sequence'''
-    
+    """
+    Calculate the percentage of sequences matched.
+    (number_matching / number_of_seq) * 100
+    """
     if number_of_seq > 0:
         nm_percentage = (number_matching / number_of_seq) * 100
         return round(nm_percentage, 2)
@@ -63,43 +75,46 @@ def percent_NM(number_matching, number_of_seq):
         return 0.0
 
 def score_percentage_nm(nm_percentage, threshold):
+    """
+    If nm_percentage < threshold, return "under_threshold".
+    Otherwise, return the difference (nm_percentage - threshold).
+    """
     if nm_percentage < threshold:
         return "under_threshold"
     else:
         return round((nm_percentage - threshold), 2)
 
 def count_gc_in_last_thirty_percent(sequence):
-    '''Function to count GC bases in the last thirty percent of the sequence'''
+    """
+    Count the GC bases in the last 30% of the sequence.
+    Useful to check the GC content at the 3' end of the primer.
+    """
     thirty_percent_length = int(len(sequence) * 0.3)
     last_thirty_percent_bases = sequence[-thirty_percent_length:]
     gc_count = last_thirty_percent_bases.count('G') + last_thirty_percent_bases.count('C')
-
     return gc_count
 
 def has_single_gc_clamp(sequence, num_bases=5):
     """
-    Function to check if there is at least one G, C, or S in the last 'num_bases' bases.
-    
-    Parameters:
-    - sequence (str): DNA sequence that may contain degenerate bases.
-    - num_bases (int): The number of bases to check from the end of the sequence (default is 5).
-    
-    Returns:
-    - bool: True if there is a GC clamp (at least one G, C, or S), False otherwise.
+    Check if there is at least one G, C, or S in the last 'num_bases' bases (3' end).
+    This helps to ensure a GC clamp.
     """
     last_bases = sequence[-num_bases:]
     return any(base in ['G', 'C', 'S'] for base in last_bases)
-    
-    
+
 def ends_with_t(sequence):
-    '''Function to check if the sequence ends with T'''
+    """Check if the sequence ends with 'T'."""
     return sequence[-1] == 'T'
 
 def self_complementarity(sequence):
-    '''Function to check if the sequence is self-complementary'''
+    """Check if the sequence is self-complementary."""
     return sequence == sequence.reverse_complement()
 
 def Tm_maxi(sequence):
+    """
+    Calculate a Tm approximation with the maximum GC scenario.
+    Tm = 2 * (A+T) + 4 * (G+C) with all degenerate bases considered GC if possible.
+    """
     tm = 0 
     nuc_GC = 0
     nuc_AT = 0
@@ -108,25 +123,49 @@ def Tm_maxi(sequence):
         if base in bases_GC:
             nuc_GC += 1
         else:
-            nuc_AT +=1        
-    tm = float(2*(nuc_AT)+4*(nuc_GC))
-    return(tm)
+            nuc_AT += 1
+    tm = float(2*(nuc_AT) + 4*(nuc_GC))
+    return tm
     
 def Tm_mini(sequence):
+    """
+    Calculate a Tm approximation with the maximum AT scenario.
+    Tm = 2 * (A+T) + 4 * (G+C) but here we consider degenerate bases as if they were A/T to minimize GC.
+    """
     tm = 0 
     nuc_GC = 0
     nuc_AT = 0
-    bases_AT = {'A', 'T','W' 'R', 'Y', 'K', 'M', 'B', 'V', 'D', 'H', 'N'}
+    bases_AT = {'A', 'T', 'W', 'R', 'Y', 'K', 'M', 'B', 'V', 'D', 'H', 'N'}
     for base in sequence:
         if base in bases_AT:
             nuc_AT += 1
         else:
-            nuc_GC +=1        
-    tm = float(2*(nuc_AT)+4*(nuc_GC))
-    return(tm)
+            nuc_GC += 1
+    tm = float(2*(nuc_AT) + 4*(nuc_GC))
+    return tm
 
-def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold):
-    '''Function to process a line and extract features'''
+def check_limiting_deg(sequence, limiting_deg):
+    """
+    If limiting_deg is provided (1 to 5), check the last 'limiting_deg' bases.
+    If a degenerate base (not A,C,G,T) is found in these positions, return False.
+    Otherwise, return True.
+    If limiting_deg is None, return True (no filtering).
+    """
+    if limiting_deg is None:
+        return True
+
+    last_bases = sequence[-limiting_deg:]
+    allowed = {'A', 'C', 'G', 'T'}
+    if any(base not in allowed for base in last_bases):
+        return False
+    return True
+
+def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold, limiting_deg):
+    """
+    Process a single line of the TSV file and extract all characteristics.
+    Apply filters based on nm_threshold, tm_max_threshold, tm_min_threshold, and limiting_deg.
+    Return a dictionary of results if the line passes the filters, else None.
+    """
     position = columns[0]
     primer = Seq(columns[5])
     primer_size = len(primer)
@@ -141,13 +180,18 @@ def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min
     ends_with_t_flag = ends_with_t(primer)
     self_complementarity_flag = self_complementarity(primer)
     gc_clamp_flag = has_single_gc_clamp(primer)
-    og_id= str(og_id) # sinon j'ai erreur : invalid literal for int() with base 10: '72971at1578'
+    og_id = str(og_id) 
     og_data = og_info.get(og_id, {})
     number_of_seq = og_data.get("NumberOfSeq", "")
     percentage_nm = percent_NM(int(number_matching), int(number_of_seq))
     score_percentage = score_percentage_nm(float(percentage_nm), nm_threshold)
     
+    # Filter based on thresholds
     if score_percentage == "under_threshold" or tm_max > tm_max_threshold or tm_min < tm_min_threshold:
+        return None
+
+    # Filter based on limiting_deg
+    if not check_limiting_deg(str(primer), limiting_deg):
         return None
 
     return {
@@ -174,26 +218,44 @@ def process_line(columns, og_id, og_info, nm_threshold, tm_max_threshold, tm_min
         "GC_clamp": gc_clamp_flag
     }
 
-def process_file(file_path, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold):
-    '''Function to process a TSV file and return a list of processed lines'''
+def process_file(file_path, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold, limiting_deg):
+    """
+    Process an entire TSV file and return a list of processed results (dicts).
+    Only keep lines that pass the filtering criteria.
+    """
     results = []
     for line in process_file_tsv(file_path):
-        result = process_line(line, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold)
+        result = process_line(line, og_id, og_info, nm_threshold, tm_max_threshold, tm_min_threshold, limiting_deg)
         if result:
             results.append(result)
     return results
 
 def write_output_table(results, output_file):
-    '''Function to write the output table to a file in the current directory'''
+    """
+    Write the output table into a file in the current directory.
+    """
     current_directory = os.getcwd()
     output_path = os.path.join(current_directory, output_file)
     with open(output_path, 'w') as out_file:
         out_file.write("OG_ID\tNumberOfSeq\tSpeciesCount\tPercentSingleCopy\tGeneName\tPrimer\tPosition\tPrimer_Size\tNumber_matching\tPercentage_NM\tScore_Percentage_NM\tDegenerescence\tTm_max\tTm_min\tGC_percentage_fraction\tGC_percentage_max\tGC_percentage_min\tGC_in_last_thirty_percent\tEnds_with_T\tSelf_Complementarity\tGC_clamp\n")
         for result in results:
-            out_file.write("\t".join(str(result[key]) for key in ["OG_ID","NumberOfSeq", "SpeciesCount", "PercentSingleCopy", "GeneName", "Primer", "Position", "Primer_Size", "Number_matching","Percentage_NM", "Score_Percentage_NM", "Degenerescence", "Tm_max", "Tm_min", "GC_percentage_fraction","GC_percentage_max", "GC_percentage_min","GC_in_last_thirty_percent", "Ends_with_T", "Self_Complementarity", "GC_clamp"]) + "\n")
+            out_file.write("\t".join(str(result[key]) for key in [
+                "OG_ID", "NumberOfSeq", "SpeciesCount", "PercentSingleCopy", "GeneName", "Primer", "Position", 
+                "Primer_Size", "Number_matching", "Percentage_NM", "Score_Percentage_NM", "Degenerescence", 
+                "Tm_max", "Tm_min", "GC_percentage_fraction","GC_percentage_max", "GC_percentage_min",
+                "GC_in_last_thirty_percent", "Ends_with_T", "Self_Complementarity", "GC_clamp"
+            ]) + "\n")
 
 def read_og_info(og_file):
-    '''Function to read OG info from a file and store it in a dictionary'''
+    """
+    Read OG information from a file and store it in a dictionary.
+    og_info[og_id] = {
+        "NumberOfSeq": ...,
+        "SpeciesCount": ...,
+        "percent_single_copy": ...,
+        "gene_name": ...
+    }
+    """
     og_info = {}
     with open(og_file, 'r') as og_file:
         next(og_file)  # Skip header
@@ -226,24 +288,29 @@ Columns in the output file:
     - $8 Primer_Size: Size of the primer
     - $9 Number_matching: Number of sequences matching this primer
     - $10 Percentage_NM : Percentage. Number of sequences caught by the primer as a function of the total number of sequences
-    - $11 Score_Percentage_NM : Score calculated as the difference between the percentage observed and a predefined threshold. 
+    - $11 Score_Percentage_NM : Score = (nm_percentage - threshold)
     - $12 Degenerescence: Degeneracy of the primer
-    - $13 Tm_max: 2*(A+T)+4*(G+C) with max of GC
-    - $14 Tm_min: 2*(A+T)+4*(G+C) with max of AT
-    - $15 GC_percentage_fraction: Fractional GC content of the primer with degeneracy
+    - $13 Tm_max: Tm with max GC
+    - $14 Tm_min: Tm with max AT
+    - $15 GC_percentage_fraction: Fractional GC content considering degeneracy
     - $16 GC_percentage_max: Maximum GC content of the primer
     - $17 GC_percentage_min: Minimum GC content of the primer
-    - $18 GC_in_last_thirty_percent: Number of GC bases in the last thirty percent base of the primer.To check GC content at the end of the primer
-    - $19 Ends_with_T: Whether the primer ends with 'T'
-    - $20 Self_Complementarity: Whether the primer is self-complementary
-    - $21 GC_clamp: Whether the primer has a single GC clamp""", formatter_class=argparse.RawTextHelpFormatter,
-    epilog="Exemple: python process_primers_stat.py -i degeprime_result/concatenated_* -og ../2_search_taxid_and_monocopy_calculation/OG_selected_1578.tab -o result_stat_primers -nm 80 -tm_max 70 -tm_min 50")
+    - $18 GC_in_last_thirty_percent: GC count in the last 30% of the primer
+    - $19 Ends_with_T: True if the primer ends with 'T'
+    - $20 Self_Complementarity: True if the primer is self-complementary
+    - $21 GC_clamp: True if there's a GC clamp in the last bases
+    Additional: --limiting_deg: Integer between 1 and 5. If provided, check the last bases for degeneracy. If found, discard the primer.
+""", formatter_class=argparse.RawTextHelpFormatter,
+    epilog="Example: python process_primers_stat.py -i degeprime_result/concatenated_* -og OG_info.tsv -o result_stat_primers -nm 80 -tm_max 70 -tm_min 50 --limiting_deg 5")
+
     parser.add_argument("-i", "--input_files", nargs='+', help="Paths to the input TSV files")
     parser.add_argument("-og", "--og_file", help="Path to the OG information file")
-    parser.add_argument("-o", "--output_dir", help="Répertoire de sortie pour les fichiers de sortie")
-    parser.add_argument("-nm", "--nm_threshold", type=float, default=80, help="Threshold for percentage NM filtering")
-    parser.add_argument("-tm_max", "--tm_max_threshold", type=float, default=70, help="Threshold for maximum temperature filtering")
-    parser.add_argument("-tm_min", "--tm_min_threshold", type=float, default=50, help="Threshold for minimum temperature filtering")
+    parser.add_argument("-o", "--output_dir", help="Output directory for results")
+    parser.add_argument("-nm", "--nm_threshold", type=float, default=80, help="Threshold for NM percentage filtering")
+    parser.add_argument("-tm_max", "--tm_max_threshold", type=float, default=70, help="Threshold for maximum Tm filtering")
+    parser.add_argument("-tm_min", "--tm_min_threshold", type=float, default=50, help="Threshold for minimum Tm filtering")
+    parser.add_argument("--limiting_deg", type=int, choices=range(1,6), help="Check last 'limiting_deg' bases for degenerate bases. If present, discard primer.")
+
     args = parser.parse_args()
 
     og_info = read_og_info(args.og_file)
@@ -255,11 +322,11 @@ Columns in the output file:
             # Extract OG ID from filename
             og_id = os.path.basename(input_file).split('_')[1].split('.')[0]
 
-            results = process_file(input_file, og_id, og_info, args.nm_threshold, args.tm_max_threshold, args.tm_min_threshold)
+            results = process_file(input_file, og_id, og_info, args.nm_threshold, args.tm_max_threshold, args.tm_min_threshold, args.limiting_deg)
             
             # Create output file name based on input file name
             output_file = os.path.join(args.output_dir, os.path.basename(os.path.splitext(input_file)[0]) + "_stat_primer.tsv")
-            # Write the results to the output file  
+            # Write the results to the output file
             write_output_table(results, output_file)
             print(f"Results written to {output_file}")
         except Exception as e:

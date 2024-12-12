@@ -3,6 +3,7 @@
 import subprocess
 import argparse
 import logging
+import re
 from collections import defaultdict
 
 __author__ = 'Gabryelle Agoutin - INRAE'
@@ -12,6 +13,15 @@ __version__ = '1.0'
 __email__ = 'gabryelle.agoutin@inrae.fr'
 __status__ = 'prod'
 
+def normalize_id(seq_id):
+    """
+    Normalize sequence ID by removing a trailing '_X', where X is one or more digits.
+    """
+    match = re.match(r"^(.*?)(_\d+)?$", seq_id)
+    if match:
+        return match.group(1)  # Return the part before the optional '_X'
+    return seq_id
+
 def parse_name_seq_with_taxo(taxonomy_file):
     """Parse the name_seq_with_taxo.txt file to extract taxonomy information."""
     taxonomy_dict = {}
@@ -20,11 +30,11 @@ def parse_name_seq_with_taxo(taxonomy_file):
             if line.startswith(">"):
                 header = line.strip()
                 parts = header[1:].split(" ", 1)
-                seq_id = parts[0].split("|")[0]
+                seq_id = normalize_id(parts[0].split("|")[0])  # Normalize ID
                 taxonomy_info = parts[1] if len(parts) > 1 else ""
                 taxonomy_dict[seq_id] = taxonomy_info
     return taxonomy_dict
-    
+
 def parse_vsearch_clusters(vsearch_cluster_file):
     """Parse the output_vsearch_cluster.txt file to create a mapping of centroids to their sequences."""
     cluster_dict = {}
@@ -35,11 +45,11 @@ def parse_vsearch_clusters(vsearch_cluster_file):
                 continue  # Ignore empty lines
             parts = line.split('\t')
             if len(parts) == 2:  # Ensure there are two parts (centroid and sequences)
-                centroid, sequences = parts
-                seq_list = sequences.split(',') if sequences else []
-                cluster_dict[centroid] = seq_list
+                centroid = normalize_id(parts[0].split("_")[0])  # Normalize centroid ID
+                sequences = parts[1].split(',') if parts[1] else []
+                cluster_dict[centroid] = [normalize_id(seq) for seq in sequences]  # Normalize sequences
             elif len(parts) == 1:  # Handle cases where there are no associated sequences
-                centroid = parts[0]
+                centroid = normalize_id(parts[0])  # Normalize centroid ID
                 cluster_dict[centroid] = []  # No associated sequences
     return cluster_dict
 
@@ -55,7 +65,7 @@ def augment_swarm_clusters(swarm_file, vsearch_cluster_file, output_swarm_file):
             
             # For each sequence in the cluster, check if it's a centroid in the VSEARCH output
             for seq_full in cluster_sequences:
-                seq_id = seq_full.split("|")[0]  # Extract the part before '|'
+                seq_id = normalize_id(seq_full.split("|")[0])  # Normalize sequence ID
                 
                 # Check if this sequence has associated sequences in the VSEARCH clusters
                 if seq_id in vsearch_clusters:
@@ -69,8 +79,6 @@ def augment_swarm_clusters(swarm_file, vsearch_cluster_file, output_swarm_file):
             f_out.write(' '.join(sorted(augmented_cluster)) + '\n')
     
     logging.info(f"Augmented Swarm clusters written to {output_swarm_file}")
-
-
 
 def run_swarm(fasta_file, output_file, threads=4, abundance=1, distance=1):
     """Run Swarm to cluster sequences."""
@@ -95,7 +103,7 @@ def process_swarm_output(swarm_file, taxonomy_dict, output_info_file):
             cluster_ids = cluster.strip().split()
             out_file.write(f"Cluster {i}:\n")
             for cluster_id in cluster_ids:
-                seq_id = cluster_id.split("|")[0]
+                seq_id = normalize_id(cluster_id.split("|")[0])  # Normalize sequence ID
                 if seq_id in taxonomy_dict:
                     info = taxonomy_dict[seq_id]
                     parts = info.split(' ', 1)
@@ -118,7 +126,7 @@ def process_swarm_output_html(swarm_file, taxonomy_dict, output_info_file_html):
             cluster_ids = cluster.strip().split()
             out_file.write(f"<h2>Cluster {i}:</h2>\n<ul>\n")
             for cluster_id in cluster_ids:
-                seq_id = cluster_id.split("|")[0]
+                seq_id = normalize_id(cluster_id.split("|")[0])  # Normalize sequence ID
                 if seq_id in taxonomy_dict:
                     info = taxonomy_dict[seq_id]
                     parts = info.split(' ', 1)

@@ -53,7 +53,7 @@ def read_tsv_file(tsv_file, genome_names):
     df = pd.read_csv(tsv_file, sep='\t')
     filtered_df = df[df['genome_name'].isin(genome_names)]
     return {
-        row['seqid']: (row['species_taxid'], row['taxonomy']) for _, row in filtered_df.iterrows()
+        row['seqid']: (int(row['species_taxid']), row['taxonomy']) for _, row in filtered_df.iterrows()
     }
 
 def filter_fasta(fasta_file, seqid_info_map, output_file, name_file):

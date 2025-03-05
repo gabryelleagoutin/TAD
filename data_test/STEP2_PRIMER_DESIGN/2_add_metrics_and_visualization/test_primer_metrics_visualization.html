@@ -1,0 +1,2600 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of Primer Metrics</title>
+    <!-- Highcharts scripts -->
+    <script src="https://code.highcharts.com/11.4.8/highcharts.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/11.4.8/modules/export-data.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Tab style */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .tab {
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+        }
+
+        .tab-content {
+            display: none;
+            width: 95%;
+            margin: 0 auto;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-wrapper {
+            border: 2px solid black;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 50px;
+            width: 90%;
+        }
+        .table-chart-container {
+            display: flex;
+        }
+        table {
+            width: 50%;
+            font-size: 12px;
+            margin: 10px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 50%;
+            margin-left: 10px;
+        }
+        .chart-column {
+            width: 100%;
+            height: 400px;
+        }
+        .forward-primer-header {
+            background-color: rgba(179, 63, 98, 0.5);
+            color: black;
+        }
+        .reverse-primer-header {
+            background-color: rgba(240, 182, 78, 0.5);
+            color: black;
+        }
+        .header {
+            background-color: rgba(166, 166, 166, 0.5);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tab menu -->
+    <div class="tabs">
+        <div class="tab active" data-tab="tab1">Primer Visualization</div>
+        <div class="tab" data-tab="tab2">Primer Position</div>
+    </div>
+
+    <!-- Contents of tab 1-->
+    <div id="tab1" class="tab-content active">
+        <h1>Primer Visualization</h1>
+        
+        <h2>Primer Pair 1</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>AAGTHTGGGCHYTNGAAGC</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3226</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>3</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>GCTTCNARDGCCCADACTT</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_0"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 2</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>AAGTHTGGGCHYTNGAAGC</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3226</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>3</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>GCTTCNARDGCCCADACTT</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_1"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 3</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">584</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>AAGTYTGGGCHYTNGARGC</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3226</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>109</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>94.78</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>96</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>64.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>54.38</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>3</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>GCYTCNARDGCCCARACTT</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_2"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 4</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GAAGTHTGGGCHYTNGAAG</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3225</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>2</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>CTTCNARDGCCCADACTTC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_3"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 5</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GAAGTHTGGGCHYTNGAAG</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3225</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>2</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>CTTCNARDGCCCADACTTC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_4"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 6</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">583</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GAAGTYTGGGCHYTNGARG</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3225</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>109</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>94.78</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>96</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>64.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>54.38</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>2</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>CYTCNARDGCCCARACTTC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_5"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 7</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GGAAGTHTGGGCHYTNGAA</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3224</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>1</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>TTCNARDGCCCADACTTCC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_6"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 8</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GGAAGTHTGGGCHYTNGAA</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3224</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>108</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>93.91</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>72</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>50.87</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>1</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>TTCNARDGCCCADACTTCC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_7"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_7"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Primer Pair 9</h2>
+        <div class="content-wrapper">
+            <div class="table-chart-container">
+                <table>
+                    <tr>
+                        <th colspan="2" class="header">Ortholog Group IDs</th>
+                        <td colspan="2">60099at1578</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Gene Name</th>
+                        <td colspan="2">DNA-directed RNA polymerase subunit beta</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Potential Amplicon Size</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Min Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Max Size Amplicon</th>
+                        <td colspan="2">582</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="header">Number of sequences in fasta</th>
+                        <td colspan="2">115</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="forward-primer-header" style="text-align: center;">Forward Primer</th>
+                        <th colspan="2" class="reverse-primer-header" style="text-align: center;">Reverse Primer</th>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Sequence 5'-3'</th><td>GTNCCDCAYGGYGGYGG</td>
+                        <th class="reverse-primer-header">Sequence 5'-3'</th><td>GGAAGTHTGGGCNYTNGAA</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Position</th><td>2625</td>
+                        <th class="reverse-primer-header">Position</th><td>3224</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Number of sequences matching this primer (Number Matching) </th><td>107</td>
+                        <th class="reverse-primer-header">Number of sequences matching this primer (Number Matching) </th><td>109</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Percentage Number Matching </th><td>93.04</td>
+                        <th class="reverse-primer-header">Percentage Number Matching </th><td>94.78</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Degenerescence </th><td>96</td>
+                        <th class="reverse-primer-header">Degenerescence </th><td>96</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Max (°C)</th><td>64.0</td>
+                        <th class="reverse-primer-header">Tm Max (°C)</th><td>62.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Tm Min (°C)</th><td>54.0</td>
+                        <th class="reverse-primer-header">Tm Min (°C)</th><td>54.0</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Percentage Fraction </th><td>72.55</td>
+                        <th class="reverse-primer-header">GC Percentage Fraction </th><td>51.75</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC in Last 30% </th><td>4</td>
+                        <th class="reverse-primer-header">GC in Last 30% </th><td>1</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Ends with T /th><td>False</td>
+                        <th class="reverse-primer-header">Ends with T </th><td>False</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">GC Clamp present </th><td>True</td>
+                        <th class="reverse-primer-header">GC Clamp present </th><td>True</td>
+                    </tr>
+                    <tr>
+                        <th class="forward-primer-header">Reverse Complement </th><td>-</td>
+                        <th class="reverse-primer-header">Reverse Complement </th><td>TTCNARNGCCCADACTTCC</td>
+                    </tr>
+                </table>
+
+                <div class="chart-container">
+                    <div class="chart-column">
+                        <div id="containerCombined_8"></div>
+                    </div>
+                    <div class="chart-column">
+                        <div id="containerGC_Combined_8"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Contents of tab 2 -->
+    <div id="tab2" class="tab-content">
+        <h1>Primer Position</h1>
+        <div id="container_xrange_60099at1578" style="height: 400px; margin-bottom: 50px;"></div>
+    </div>
+
+    <script>
+        // Tab management
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                // Cache tous les contenus
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                tab.classList.add('active');
+                const target = tab.getAttribute('data-tab');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        // Correction of the colour bug in the X-range legend
+        (function(H) {
+            H.Legend.prototype.getAllItems = function () {
+                var allItems = [];
+                H.each(this.chart.series, function (series) {
+                    var seriesOptions = series && series.options;
+                    if (series.type === 'xrange') {
+                        series.color = series.userOptions.color;
+                    }
+                    if (series && H.pick(
+                        seriesOptions.showInLegend,
+                        !H.defined(seriesOptions.linkedTo) ? undefined : false, true
+                    )) {
+                        allItems = allItems.concat(
+                            series.legendItems ||
+                            (
+                                seriesOptions.legendType === 'point' ?
+                                    series.data :
+                                    series
+                            )
+                        );
+                    }
+                });
+
+                H.fireEvent(this, 'afterGetAllItems', { allItems: allItems });
+
+                return allItems;
+            }
+        })(Highcharts);
+
+        // Scripts for degeneracy/GC graphs
+        
+Highcharts.chart('containerCombined_0', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 1, "letter": "T"}, {"category": "4", "y": 1, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 4, "letter": "N"}, {"category": "7", "y": 1, "letter": "A"}, {"category": "8", "y": 2, "letter": "R"}, {"category": "9", "y": 3, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 3, "letter": "D"}, {"category": "16", "y": 1, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_0', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 0, "letter": "T"}, {"category": "4", "y": 0, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.5, "letter": "N"}, {"category": "7", "y": 0, "letter": "A"}, {"category": "8", "y": 0.5, "letter": "R"}, {"category": "9", "y": 0.333, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 0.333, "letter": "D"}, {"category": "16", "y": 0, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 0, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_1', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 1, "letter": "T"}, {"category": "4", "y": 1, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 4, "letter": "N"}, {"category": "7", "y": 1, "letter": "A"}, {"category": "8", "y": 2, "letter": "R"}, {"category": "9", "y": 3, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 3, "letter": "D"}, {"category": "16", "y": 1, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_1', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 0, "letter": "T"}, {"category": "4", "y": 0, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.5, "letter": "N"}, {"category": "7", "y": 0, "letter": "A"}, {"category": "8", "y": 0.5, "letter": "R"}, {"category": "9", "y": 0.333, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 0.333, "letter": "D"}, {"category": "16", "y": 0, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 0, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_2', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 2, "letter": "Y"}, {"category": "4", "y": 1, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 4, "letter": "N"}, {"category": "7", "y": 1, "letter": "A"}, {"category": "8", "y": 2, "letter": "R"}, {"category": "9", "y": 3, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 2, "letter": "R"}, {"category": "16", "y": 1, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_2', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "C"}, {"category": "3", "y": 0.5, "letter": "Y"}, {"category": "4", "y": 0, "letter": "T"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.5, "letter": "N"}, {"category": "7", "y": 0, "letter": "A"}, {"category": "8", "y": 0.5, "letter": "R"}, {"category": "9", "y": 0.333, "letter": "D"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "C"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 0.5, "letter": "R"}, {"category": "16", "y": 0, "letter": "A"}, {"category": "17", "y": 1, "letter": "C"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 0, "letter": "T"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_3', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 1, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 4, "letter": "N"}, {"category": "6", "y": 1, "letter": "A"}, {"category": "7", "y": 2, "letter": "R"}, {"category": "8", "y": 3, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "A"}, {"category": "14", "y": 3, "letter": "D"}, {"category": "15", "y": 1, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_3', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 0.5, "letter": "N"}, {"category": "6", "y": 0, "letter": "A"}, {"category": "7", "y": 0.5, "letter": "R"}, {"category": "8", "y": 0.333, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 0, "letter": "A"}, {"category": "14", "y": 0.333, "letter": "D"}, {"category": "15", "y": 0, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_4', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 1, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 4, "letter": "N"}, {"category": "6", "y": 1, "letter": "A"}, {"category": "7", "y": 2, "letter": "R"}, {"category": "8", "y": 3, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "A"}, {"category": "14", "y": 3, "letter": "D"}, {"category": "15", "y": 1, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_4', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 0.5, "letter": "N"}, {"category": "6", "y": 0, "letter": "A"}, {"category": "7", "y": 0.5, "letter": "R"}, {"category": "8", "y": 0.333, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 0, "letter": "A"}, {"category": "14", "y": 0.333, "letter": "D"}, {"category": "15", "y": 0, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_5', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 2, "letter": "Y"}, {"category": "3", "y": 1, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 4, "letter": "N"}, {"category": "6", "y": 1, "letter": "A"}, {"category": "7", "y": 2, "letter": "R"}, {"category": "8", "y": 3, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 1, "letter": "A"}, {"category": "14", "y": 2, "letter": "R"}, {"category": "15", "y": 1, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_5', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "C"}, {"category": "2", "y": 0.5, "letter": "Y"}, {"category": "3", "y": 0, "letter": "T"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 0.5, "letter": "N"}, {"category": "6", "y": 0, "letter": "A"}, {"category": "7", "y": 0.5, "letter": "R"}, {"category": "8", "y": 0.333, "letter": "D"}, {"category": "9", "y": 1, "letter": "G"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "C"}, {"category": "13", "y": 0, "letter": "A"}, {"category": "14", "y": 0.5, "letter": "R"}, {"category": "15", "y": 0, "letter": "A"}, {"category": "16", "y": 1, "letter": "C"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 0, "letter": "T"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_6', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "T"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 4, "letter": "N"}, {"category": "5", "y": 1, "letter": "A"}, {"category": "6", "y": 2, "letter": "R"}, {"category": "7", "y": 3, "letter": "D"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "A"}, {"category": "13", "y": 3, "letter": "D"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 1, "letter": "T"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_6', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 0, "letter": "T"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 0.5, "letter": "N"}, {"category": "5", "y": 0, "letter": "A"}, {"category": "6", "y": 0.5, "letter": "R"}, {"category": "7", "y": 0.333, "letter": "D"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 0, "letter": "A"}, {"category": "13", "y": 0.333, "letter": "D"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 0, "letter": "T"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_7', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "T"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 4, "letter": "N"}, {"category": "5", "y": 1, "letter": "A"}, {"category": "6", "y": 2, "letter": "R"}, {"category": "7", "y": 3, "letter": "D"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "A"}, {"category": "13", "y": 3, "letter": "D"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 1, "letter": "T"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_7', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 0, "letter": "T"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 0.5, "letter": "N"}, {"category": "5", "y": 0, "letter": "A"}, {"category": "6", "y": 0.5, "letter": "R"}, {"category": "7", "y": 0.333, "letter": "D"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 0, "letter": "A"}, {"category": "13", "y": 0.333, "letter": "D"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 0, "letter": "T"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerCombined_8', {
+    chart: {
+        type: 'line',
+        spacingBottom: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer Degeneracy Level'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'Forward Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'Reverse Primer Degeneracy Level',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0,
+        max: 4,
+        tickPositions: [0, 1, 2, 3, 4],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}', 
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 4, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 3, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 1, "letter": "A"}, {"category": "9", "y": 2, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 2, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 2, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 1, "letter": "T"}, {"category": "2", "y": 1, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 4, "letter": "N"}, {"category": "5", "y": 1, "letter": "A"}, {"category": "6", "y": 2, "letter": "R"}, {"category": "7", "y": 4, "letter": "N"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 1, "letter": "A"}, {"category": "13", "y": 3, "letter": "D"}, {"category": "14", "y": 1, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 1, "letter": "T"}, {"category": "17", "y": 1, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+Highcharts.chart('containerGC_Combined_8', {
+    chart: {
+        type: 'line',
+        spacingTop: 50
+    },
+    title: {
+        text: 'Forward and Reverse Primer GC Content'
+    },
+    xAxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    yAxis: [{
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        height: '45%',
+        offset: 0
+    }, {
+        title: {
+            text: 'GC rate',
+            align: 'middle',
+            rotation: 270,
+            margin: 40
+        },
+        min: 0.1,
+        max: 1.5,
+        tickPositions: [0, 0.5, 1, 1.5],
+        labels: {
+            align: 'left',
+            x: -10,
+            y: 10,
+            style: {
+                fontSize: '10px'
+            }
+        },
+        top: '55%',
+        height: '45%',
+        offset: 0
+    }],
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.letter}',
+                style: {
+                    fontSize: '10px'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Forward Primer',
+        data: [{"category": "1", "y": 1, "letter": "G"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 0.5, "letter": "N"}, {"category": "4", "y": 1, "letter": "C"}, {"category": "5", "y": 1, "letter": "C"}, {"category": "6", "y": 0.333, "letter": "D"}, {"category": "7", "y": 1, "letter": "C"}, {"category": "8", "y": 0, "letter": "A"}, {"category": "9", "y": 0.5, "letter": "Y"}, {"category": "10", "y": 1, "letter": "G"}, {"category": "11", "y": 1, "letter": "G"}, {"category": "12", "y": 0.5, "letter": "Y"}, {"category": "13", "y": 1, "letter": "G"}, {"category": "14", "y": 1, "letter": "G"}, {"category": "15", "y": 0.5, "letter": "Y"}, {"category": "16", "y": 1, "letter": "G"}, {"category": "17", "y": 1, "letter": "G"}],
+        color: '#B33F62',
+        yAxis: 0
+    }, {
+        name: 'Reverse Primer',
+        data: [{"category": "1", "y": 0, "letter": "T"}, {"category": "2", "y": 0, "letter": "T"}, {"category": "3", "y": 1, "letter": "C"}, {"category": "4", "y": 0.5, "letter": "N"}, {"category": "5", "y": 0, "letter": "A"}, {"category": "6", "y": 0.5, "letter": "R"}, {"category": "7", "y": 0.5, "letter": "N"}, {"category": "8", "y": 1, "letter": "G"}, {"category": "9", "y": 1, "letter": "C"}, {"category": "10", "y": 1, "letter": "C"}, {"category": "11", "y": 1, "letter": "C"}, {"category": "12", "y": 0, "letter": "A"}, {"category": "13", "y": 0.333, "letter": "D"}, {"category": "14", "y": 0, "letter": "A"}, {"category": "15", "y": 1, "letter": "C"}, {"category": "16", "y": 0, "letter": "T"}, {"category": "17", "y": 0, "letter": "T"}, {"category": "18", "y": 1, "letter": "C"}, {"category": "19", "y": 1, "letter": "C"}],
+        color: '#F0B64E',
+        yAxis: 1
+    }]
+});
+
+
+
+        // X-range scripts
+        
+Highcharts.chart('container_xrange_60099at1578', {
+    chart: {
+        type: 'xrange'
+    },
+    title: {
+        text: 'Primer Position for 60099at1578'
+    },
+    xAxis: {
+        title: {
+            text: 'Alignment Size'
+        },
+        min: 0,
+        max: 3711
+    },
+    yAxis: {
+        categories: ['Forward Primer', 'Reverse Primer'],
+        title: {
+            text: null
+        },
+        reversed: true
+    },
+    series: [
+    {
+        "name": "Primer 1",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#277da1"
+            },
+            {
+                "x": 3226,
+                "x2": 3245,
+                "y": 1,
+                "color": "#277da1"
+            }
+        ],
+        "color": "#277da1"
+    },
+    {
+        "name": "Primer 2",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#577590"
+            },
+            {
+                "x": 3226,
+                "x2": 3245,
+                "y": 1,
+                "color": "#577590"
+            }
+        ],
+        "color": "#577590"
+    },
+    {
+        "name": "Primer 3",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#4d908e"
+            },
+            {
+                "x": 3226,
+                "x2": 3245,
+                "y": 1,
+                "color": "#4d908e"
+            }
+        ],
+        "color": "#4d908e"
+    },
+    {
+        "name": "Primer 4",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#43aa8b"
+            },
+            {
+                "x": 3225,
+                "x2": 3244,
+                "y": 1,
+                "color": "#43aa8b"
+            }
+        ],
+        "color": "#43aa8b"
+    },
+    {
+        "name": "Primer 5",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#90be6d"
+            },
+            {
+                "x": 3225,
+                "x2": 3244,
+                "y": 1,
+                "color": "#90be6d"
+            }
+        ],
+        "color": "#90be6d"
+    },
+    {
+        "name": "Primer 6",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#f9c74f"
+            },
+            {
+                "x": 3225,
+                "x2": 3244,
+                "y": 1,
+                "color": "#f9c74f"
+            }
+        ],
+        "color": "#f9c74f"
+    },
+    {
+        "name": "Primer 7",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#f9844a"
+            },
+            {
+                "x": 3224,
+                "x2": 3243,
+                "y": 1,
+                "color": "#f9844a"
+            }
+        ],
+        "color": "#f9844a"
+    },
+    {
+        "name": "Primer 8",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#f8961e"
+            },
+            {
+                "x": 3224,
+                "x2": 3243,
+                "y": 1,
+                "color": "#f8961e"
+            }
+        ],
+        "color": "#f8961e"
+    },
+    {
+        "name": "Primer 9",
+        "data": [
+            {
+                "x": 2625,
+                "x2": 2642,
+                "y": 0,
+                "color": "#f3722c"
+            },
+            {
+                "x": 3224,
+                "x2": 3243,
+                "y": 1,
+                "color": "#f3722c"
+            }
+        ],
+        "color": "#f3722c"
+    }
+]
+});
+
+
+    </script>
+
+</body>
+</html>

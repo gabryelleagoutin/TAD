@@ -1,0 +1,4 @@
+2025-03-04 16:03:46,600 - INFO - Selection and extraction completed. Filtered sequences have been saved to filtered_16S.fna.
+2025-03-04 16:03:46,602 - INFO - Sequence names (including taxonomy) have been saved to name_seq_amplicon.txt.
+2025-03-04 16:03:46,646 - INFO - Unique taxonomies have been saved to uniq_taxonomy_amplicon.txt.
+2025-03-04 16:03:46,646 - INFO - Number of unique taxonomies: 1154.

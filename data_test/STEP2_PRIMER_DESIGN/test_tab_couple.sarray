@@ -1,0 +1,2 @@
+python couple_primer.py -i result_stat_primers/concatenated_60099at1578_stat_primer.tsv -f alignment/ --amplicon_min_size 150 --amplicon_max_size 590
+python couple_primer.py -i result_stat_primers/concatenated_67434at1578_stat_primer.tsv -f alignment/ --amplicon_min_size 150 --amplicon_max_size 590

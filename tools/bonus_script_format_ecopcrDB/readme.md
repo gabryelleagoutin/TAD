@@ -1,3 +1,38 @@
+# The different TaxonMarker databases
+## OrthoDB
+
+Database maintained by the University of Geneva and the SIB (Swiss Institute of Bioinformatics)
+
+It contains groups of orthologous genes from the entire living kingdom
+ = All the descendants of a particular single gene from the last common ancestor of these species.
+
+This is the database used by the TaxonMarker tool to retrieve target genes. 
+
+links to download OrthoDB:
+```bash
+wget -r https://data.orthodb.org/v11/download/
+```
+
+
+## 16S Database 
+### Description de la base de données utilisées (identique pour EcoPCR)
+Description of the database used (identical for EcoPCR)
+We will extract the 16S from a database containing the NCBI microbial genomes (fasta and gff) contained in the RefSeq and GenBank databases with the GTDB taxonomy using the genome_updater tool.
+
+This database comes from this download 
+```bash
+genome_updater.sh -g "archaea,bacteria" -d "refseq,genbank" -M "gtdb" -f "genomic.gff.gz,genomic.fna.gz" -a -o downloads -N -t 2 -V -Z -R 6 -L curl
+```
+with this tool:
+https://github.com/pirovc/genome_updater
+Bash script to download/update snapshots of files from NCBI genomes repository (refseq/genbank) with track of changes and without redundancy
+
+It is kept at the Genotoul cluster in Toulouse, and all the information is available here:
+
+```bash 
+/work/bank2/users_banks/NCBI_refseq_genbank_archea_bacteria/NCBI_refseq_genbank_archea_bacteria_05_2024/README
+```
+
 ### 16S extraction
 
 We need the scripts
@@ -218,4 +253,3 @@ for assembly in $ecopcr_assembly_dir
     done
 
 ```
-

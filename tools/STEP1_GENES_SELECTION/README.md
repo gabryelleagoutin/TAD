@@ -90,6 +90,6 @@ The output is :
 - An HTML file providing information on both the orthologous gene group (OG) and the gene itself
 
 ![html example:](./Taxonmarker_step1_result_html.png)
-You have obtained your orthologous genes. Now you need to move on to step 2 
+You have obtained your orthologous genes. Now you need to move on to [STEP2_PRIMER_DESIGN](./tools/STEP2_PRIMER_DESIGN)
 
 

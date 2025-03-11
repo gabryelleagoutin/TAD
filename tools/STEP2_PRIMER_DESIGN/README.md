@@ -161,7 +161,7 @@ A script called primer_metrics_visualization.py takes the sorted_results.tsv fil
     - A graph showing the distribution of degeneracy. It is preferable for degeneracy to be more concentrated at the beginning of the primer than at the end. This histogram gives a better idea of the distribution.
     - A graph showing GC concentration at different positions.
 
-- By OG :
+- Per OGs :
     - A graph showing the position of the primers on the gene alignment.
 
 As part of the analysis with the FROGS tool, we also need the theoretical minimum and maximum amplicon sizes. To do this, we run in silico PCR steps to retrieve this information. This step can be performed before running primer_metrics_visualization.py.

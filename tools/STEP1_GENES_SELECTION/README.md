@@ -44,7 +44,7 @@ The script can sort according to three criteria:
 
 > -p <percent_single_copy> (mandatory, set to 0 if no selection is desired). 
 > [-c <TargetSpecies_Count>] Minimum number of species (because an OG containing only two species at 100% of our rank is less interesting than one containing 100). 
--t <TargetSpecies_Percentage>] Minimum percentage to include only OGs potentially corresponding to our rank of interest.
+> -t <TargetSpecies_Percentage>] Minimum percentage to include only OGs potentially corresponding to our rank of interest.
 
 We can already find out how many species are descending from our taxonomic rank by using the following command (it is indicated in the --help of the script).
 
@@ -89,6 +89,7 @@ The output is :
 - The updated table (in our example: updated_test_output_OG_1578_selected_home.tab)
 - An HTML file providing information on both the orthologous gene group (OG) and the gene itself
 
+![html example:](./Taxonmarker_step1_result_html.png)
 You have obtained your orthologous genes. Now you need to move on to step 2 
 
 

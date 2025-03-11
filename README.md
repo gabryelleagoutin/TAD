@@ -4,6 +4,9 @@
 
 TaxonMarker is a tool developed in Python and Bash, designed to identify genetic markers specific to a given taxonomic rank. In metabarcoding sequencing analysis, the 16S rRNA gene is commonly used, although it has limitations, notably its presence in multiple copies and its low resolution at the level of closely related organisms. The aim of TaxonMarker is to select target genes that are potentially more effective than 16S at discriminating between species. As an input, simply provide the desired taxonomic identifier (for example, family ‘Actinomycetes’, taxid: 1760).
 
+![TaxonMarker pipeline:](./TaxonMarker_pipeline.png)
+
+
 **TaxonMarker is divided into 3 pipelines:**
 
 * STEP 1: Gene selection 

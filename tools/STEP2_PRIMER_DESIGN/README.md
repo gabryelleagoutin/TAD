@@ -1,6 +1,7 @@
 # STEP2_PRIMER_DESIGN
 ## Degeprime installation
 You need to install this tool.
+
 ```bash
 git clone https://github.com/EnvGen/DEGEPRIME.git
 ```
@@ -10,6 +11,7 @@ For users of a calculation cluster, this script runs all the steps at once. To d
 ```bash!
 sbatch -J primer_pipeline  -o %x.out -e %x.err -p workq --mem=80G -c 4 --wrap="sh 1_primer_pipeline.sh --fasta_path ../STEP1_GENES_SELECTION/2_fasta_recovery/ --degeneracies_values 72 96 --min_primer_length 14 --max_primer_length 24 --tab_og_updated ../STEP1_GENES_SELECTION/2_fasta_recovery/test_output_updated_test_OG_1578_selected.tab --number_matching_max 80 --tm_max 65 --tm_min 54 --amplicon_min_size 150 --amplicon_max_size 590"
 ```
+
 parameter descriptions:
 ```bash
 Options:
@@ -204,7 +206,7 @@ python 2_launch_ecopcr_and_add_amplicon_length_info.py ../sorted_results.tsv eco
 ```
 
 # c. Starting the visualisation
-**conda TaxonMarker_main environment**
+**conda environement TaxonMarker_main**
 
 /!\ The conda TaxonMarker_main environment must be activated. Otherwise you will get errors because this is not the correct version of python.
 
@@ -212,7 +214,12 @@ Example:
 ```
 python 3_primer_metrics_visualization.py -i ../sorted_results_updated.tsv -o primer_metrics_visualization.html
 ```
+Vision of html result:
+![Information primers pair (tab 1):](./Taxonmarker_step2_result_html_idcards.png)
+![Information localisation primers pair (tab 2) :](./Taxonmarker_step2_result_html_localisation.png)
+
 
 You now need to select the primer pairs you think are most appropriate. You have finished and obtained your primers.
 
-If you want to test them, go to the home page to read the information in the section ‘Description of the databases available for TaxonMarker’, then go on to step 3.
+
+If you want to test them, go to the home page to read the information in the section ‘Description of the databases available for TaxonMarker’ [here](../../README.md) , then go on to [STEP3_IN_SILICO_VALIDATION](../STEP3_IN_SILICO_VALIDATION)

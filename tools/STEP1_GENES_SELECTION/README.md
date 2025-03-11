@@ -66,7 +66,7 @@ Example:
 ./OG_selection.sh -p 0 -c 250 -t 100 -o test_output_OG_1578_selected_home.tab test_output_OG_1578_home.tab
 ```
 
-## 3. fasta recovery
+## 2. fasta recovery
 
 Downloading gene sequences in nucleic acid format
 

@@ -9,7 +9,7 @@ TaxonMarker is a tool developed in Python and Bash, designed to identify genetic
 * STEP 1: Gene selection 
 In this step, we will select, from the OrthoDB database, orthologous gene groups which include a sufficient number of species corresponding to the defined taxonomic rank. We will obtain a fasta for each orthologous group. We also get a summary sheet of all the information we have on the gene. 
 
-  See the ... for more details and all the steps.
+  See the [STEP1_GENES_SELECTION](./tools/STEP1_GENES_SELECTION) folder for more details and all the steps.
 
 * STEP 2: Primer design 
 During this stage, we align the FASTA sequences to generate pairs of primers. We then select them according to various criteria, such as melting temperature, presence of a GC clamp, etc. We obtain the best possible pairs with a graphical output of their characteristics.

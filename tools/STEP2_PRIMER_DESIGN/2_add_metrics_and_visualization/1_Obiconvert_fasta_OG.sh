@@ -1,8 +1,9 @@
 #!/bin/bash
 
-ml devel/Miniconda/Miniconda3
-source $MY_CONDA_PATH
-conda activate TaxonMarker_EcoPCR
+# activate these commands if you are in a computing cluster
+# ml devel/Miniconda/Miniconda3
+# source $MY_CONDA_PATH
+# conda activate TaxonMarker_EcoPCR
 
 
 # Check if at least two arguments are provided (path to ncbi_tax_dump and at least one FASTA file)

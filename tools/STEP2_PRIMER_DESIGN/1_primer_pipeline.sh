@@ -16,11 +16,9 @@ conda activate TaxonMarker_swarm
 # Available parameters:
 #   --fasta_path <path>           : Path to the directory containing the .fa files
 #                                   (mandatory, no default value).
-#
-#   --max_degeneracies <int>      : Maximum value for degeneracy.
-#                                   Generates a step list of 12 from 0 up to this value
-#                                   (example: 0 12 24 ... 96).
-#                                   Default value: 96.
+#   --degeneracies_values <int>   : List of degeneracy values to be used.
+#                                   Example: 48 96 
+#                                   This is a mandatory parameter.
 #
 #   --min_primer_length <int>     : Minimum primer length (default: 14).
 #   --max_primer_length <int>     : Maximum primer length (default: 24).
@@ -43,13 +41,9 @@ conda activate TaxonMarker_swarm
 #
 ###############################################################################
 
-############################
-# 2) Gestion des paramètres
-############################
-
-# Valeurs par défaut
+# default values
 FASTA_PATH=""
-MAX_DEGENERACIES=96
+DEGENERACIES_VALUES_LIST=()
 MIN_PRIMER_LENGTH=14
 MAX_PRIMER_LENGTH=24
 TAB_OG_UPDATED=""
@@ -59,14 +53,15 @@ TM_MIN=54
 AMPLICON_MIN_SIZE=150
 AMPLICON_MAX_SIZE=590
 
-# Help
+
+#help
 
 usage() {
     echo "Usage: $0 [options]"
     echo ""
     echo "Options:"
     echo "  --fasta_path <path>            Path to the directory containing the .fa files (mandatory, no default value)."
-    echo "  --max_degeneracies <int>       Maximum degeneracy value (in steps of 12). Default: 96."
+    echo "  --degeneracies_values <int>    List of degeneracy values (e.g., 48 96). Mandatory."
     echo "  --min_primer_length <int>      Minimum primer length. Default: 14."
     echo "  --max_primer_length <int>      Maximum primer length. Default: 24."
     echo "  --tab_og_updated <path>        File for the -og parameter in process_primers_stat.py. This is the updated OG file after downloading the FASTA files. (default is empty, so it is mandatory if Step 6 is used)."
@@ -81,17 +76,19 @@ usage() {
 }
 
 
-
-# Args
+# 2) Parsing args
 while [[ $# -gt 0 ]]; do
     case $1 in
         --fasta_path)
             FASTA_PATH="$2"
             shift; shift
             ;;
-        --max_degeneracies)
-            MAX_DEGENERACIES="$2"
-            shift; shift
+        --degeneracies_values)
+            shift
+            while [[ $# -gt 0 && ! $1 =~ ^-- ]]; do
+                DEGENERACIES_VALUES_LIST+=("$1")
+                shift
+            done
             ;;
         --min_primer_length)
             MIN_PRIMER_LENGTH="$2"
@@ -135,11 +132,16 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# mandatory args
 if [ -z "$FASTA_PATH" ]; then
     echo "Error: you must specify --fasta_path"
     usage
 fi
 
+if [ ${#DEGENERACIES_VALUES_LIST[@]} -eq 0 ]; then
+    echo "Error: you must specify --degeneracies_values (one or more values)"
+    usage
+fi
 
 #############################################
 # Step 1: Alignment (clustalOmega)
@@ -181,18 +183,8 @@ s_array_base='degeprime_multiple_params'
 fasta_files='alignment/*.fa'
 result_dir='degeprime_result/'
 aln_dir='alignment/'
-# Dynamic construction of the list of degenerations (steps of 12)
-# Example: if MAX_DEGENERACIES=96 => 0 12 24 36 48 60 72 84 96
-degeneracies_list=()
-start_deg=0
-step_deg=12
-while [ $start_deg -le $MAX_DEGENERACIES ]; do
-    degeneracies_list+=($start_deg)
-    start_deg=$((start_deg + step_deg))
-done
 
-# Construction of the list of primer lengths (steps of 1)
-# Example: if MIN_PRIMER_LENGTH=14 and MAX_PRIMER_LENGTH=24 => 14 15 16 ... 24
+degeneracies_list=("${DEGENERACIES_VALUES_LIST[@]}")
 lengths_list=($(seq $MIN_PRIMER_LENGTH 1 $MAX_PRIMER_LENGTH))
 
 degeneracies="${degeneracies_list[*]}"
@@ -213,16 +205,16 @@ do
   cog=$(basename "$fasta_file" .fa)
   trimmed_alignment="$aln_dir/trimmed_${cog}.fna"
 
-  for d in $degeneracies
+  for d in "${degeneracies_list[@]}"
   do
-    for l in $lengths
+    for l in "${lengths_list[@]}"
     do
       output_fl=$result_dir/${cog}_d${d}_l${l}.tsv
 
       echo "perl DEGEPRIME/DegePrime.pl -i $trimmed_alignment -d $d -l $l -o $output_fl" >> "$s_array_file"
       ((line_count++))
 
-      # If the line_limit is exceeded, a new file is created
+      # the maximum number of lines for sarray is 2500 lines
       if [ "$line_count" -ge "$line_limit" ]; then
         line_count=0
         ((file_count++))
@@ -249,7 +241,7 @@ for sarray_file in degeprime_multiple_params_*.sarray; do
     job_id=$(sarray --mem=200G "$sarray_file" | awk '{print $NF}')
     echo "Submitted batch job $job_id for $sarray_file"
 
-    # On attend la fin du job avant de passer au suivant
+    #  We wait for the job to finish before moving on to the next one
     echo "Waiting for Sarray job $job_id to complete..."
     while squeue -j "$job_id" &> /dev/null; do
         echo "Sarray job for job ID $job_id still running..."
@@ -281,7 +273,7 @@ if [ -z "$prefixes" ]; then
     exit 1
 fi
 
-# Concatenation by prefix
+
 for prefix in $prefixes; do
     echo "Processing prefix: $prefix"
     files=$(ls -1 "$directory"/"$prefix"* 2>/dev/null | grep -E ".*\.tsv$")
@@ -290,7 +282,6 @@ for prefix in $prefixes; do
         echo "Concatenating files for prefix $prefix"
         concatenated_file="$directory/concatenated_$prefix.tsv"
         cat $(echo "$files" | head -n1) > "$concatenated_file"
-        #we add the rest, ignoring the first line (header)
         for file in $(echo "$files" | tail -n+2); do
             tail -n +2 "$file" >> "$concatenated_file"
         done
@@ -373,18 +364,12 @@ header_file="header.tsv"
 
 cat $(grep -L '^$' result_stat_primers/*_primer_couple.tsv) > "$combined_results_file"
 
-
 head -n 1 "$combined_results_file" > "$header_file"
 sed -i '1!{/^OG_ID/d;}' "$combined_results_file"
-# Sorted by column 43 (score), descending order
 sort -t$'\t' -k43,43nr "$combined_results_file" > sorted_data.tsv
-# We retrieve the 3 best values from column 43
 top_scores=$(awk -F'\t' '{print $43}' sorted_data.tsv | sort -nr | uniq | head -n 3)
 pattern=$(echo $top_scores | tr ' ' '|')
-# Filters out the rows corresponding to these score values
 awk -v pattern="$pattern" -F'\t' 'NR==1; NR>1 && $43 ~ pattern' sorted_data.tsv > "$filtered_results_file"
-
-# add header
 cat "$header_file" "$filtered_results_file" > "$sorted_results_file"
 
 rm sorted_data.tsv "$combined_results_file" "$header_file" "$filtered_results_file"

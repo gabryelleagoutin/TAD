@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Genes information summary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .tab-button {
+      background-color: #F0B64E; 
+      border: 1px solid #ccc;
+      padding: 10px;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 5px;
+      margin-bottom: 10px;
+    }
+    .tab-button:hover {
+      background-color: #e5ab45; 
+    }
+
+    .tab-content {
+      display: none; 
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .active {
+      display: block; 
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 10px;
+    }
+
+    table, th, td {
+      border: 1px solid #888;
+      padding: 5px;
+    }
+
+    th {
+      background-color: #F0B64E; 
+    }
+
+    .section-title {
+      color: #B33F62;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .subheading {
+      margin-left: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .gene-name {
+      color: #B33F62;
+    }
+  </style>
+  <script>
+    function openTab(evt, tabId) {
+      // Hide all tab contents
+      var tabcontents = document.getElementsByClassName("tab-content");
+      for (var i = 0; i < tabcontents.length; i++) {
+          tabcontents[i].style.display = "none";
+      }
+      // Show the content for the clicked tab
+      document.getElementById(tabId).style.display = "block";
+    }
+  </script>
+</head>
+<body>
+  <h1>Genes information summary</h1>
+  <div>
+    <button class="tab-button" onclick="openTab(event, '60099at1578')">60099at1578</button>
+    <button class="tab-button" onclick="openTab(event, '67434at1578')">67434at1578</button>
+  </div>
+
+  <div id="60099at1578" class="tab-content">
+    <!-- OG ID and protein name centered -->
+    <h2 class="centered">60099at1578</h2>
+    <h3 class="centered gene-name">DNA-directed RNA polymerase, subunit 2, hybrid-binding domain</h3>
+    <p class="centered"><strong>Source:&nbsp;</strong>
+       <a href="https://www.orthodb.org/?level=&species=&query=60099at1578" target="_blank">https://www.orthodb.org/?level=&species=&query=60099at1578</a>
+    </p>
+
+    <h3 class="section-title">OG information</h3>
+    <table>
+      <tr>
+        <th>ProteinCount</th><th>SpeciesCount</th><th>nb_single_copy</th>
+        <th>percent_single_copy</th><th>TargetSpecies_Count</th><th>TargetSpecies_Percentage</th>
+        <th>NumberOfSeq</th>
+      </tr>
+      <tr>
+        <td>262</td><td>252</td><td>260</td>
+        <td>99.61685823754789</td><td>252</td><td>100.0</td>
+        <td>115</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Functional Descriptions</h3>
+<p class='subheading'>Functional Category:</p>
+<ul>
+  <li>T: Signal transduction mechanisms</li>
+  <li>K: Transcription</li>
+  <li>V: Defense mechanisms</li>
+  <li>J: Translation, ribosomal structure and biogenesis</li>
+</ul>
+<p class='subheading'>GO Molecular Function:</p>
+<ul>
+  <li>108 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0032549' target='_blank'>GO:0032549</a>: ribonucleoside binding</li>
+  <li>108 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0016779' target='_blank'>GO:0016779</a>: nucleotidyltransferase activity</li>
+  <li>108 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0016740' target='_blank'>GO:0016740</a>: transferase activity</li>
+  <li>91 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0034062' target='_blank'>GO:0034062</a>: 5'-3' RNA polymerase activity</li>
+</ul>
+<p class='subheading'>GO Cellular Component:</p>
+<ul>
+  <li>108 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0000428' target='_blank'>GO:0000428</a>: DNA-directed RNA polymerase complex</li>
+</ul>
+<p class='subheading'>InterPro Domains:</p>
+<ul>
+  <li>111 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR015712/' target='_blank'>IPR015712</a>: DNA-directed RNA polymerase, subunit 2</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR019462/' target='_blank'>IPR019462</a>: DNA-directed RNA polymerase, beta subunit, external 1 domain</li>
+  <li>111 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR037033/' target='_blank'>IPR037033</a>: DNA-directed RNA polymerase, subunit 2, hybrid-binding domain superfamily</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007645/' target='_blank'>IPR007645</a>: RNA polymerase Rpb2, domain 3</li>
+  <li>93 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR042107/' target='_blank'>IPR042107</a>: DNA-directed RNA polymerase, beta subunit, external 1 domain superfamily</li>
+  <li>110 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007121/' target='_blank'>IPR007121</a>: RNA polymerase, beta subunit, conserved site</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007120/' target='_blank'>IPR007120</a>: DNA-directed RNA polymerase, subunit 2, hybrid-binding domain</li>
+  <li>105 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR037034/' target='_blank'>IPR037034</a>: RNA polymerase Rpb2, domain 2 superfamily</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007641/' target='_blank'>IPR007641</a>: RNA polymerase Rpb2, domain 7</li>
+  <li>111 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR010243/' target='_blank'>IPR010243</a>: DNA-directed RNA polymerase beta subunit, bacterial-type</li>
+  <li>111 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR014724/' target='_blank'>IPR014724</a>: RNA polymerase Rpb2, OB-fold</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007642/' target='_blank'>IPR007642</a>: RNA polymerase Rpb2, domain 2</li>
+  <li>112 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR007644/' target='_blank'>IPR007644</a>: RNA polymerase, beta subunit, protrusion</li>
+</ul>
+<p class='subheading'>EC Numbers:</p>
+<ul>
+  <li>113 genes with <a href='https://www.rhea-db.org/rhea?query=ec:2.7.7.6' target='_blank'>2.7.7.6</a>: DNA-directed RNA polymerase; nucleoside triphosphate + RNAn = diphosphate + RNAn+1</li>
+</ul>
+  </div>
+
+  <div id="67434at1578" class="tab-content">
+    <!-- OG ID and protein name centered -->
+    <h2 class="centered">67434at1578</h2>
+    <h3 class="centered gene-name">threonine--tRNA ligase</h3>
+    <p class="centered"><strong>Source:&nbsp;</strong>
+       <a href="https://www.orthodb.org/?level=&species=&query=67434at1578" target="_blank">https://www.orthodb.org/?level=&species=&query=67434at1578</a>
+    </p>
+
+    <h3 class="section-title">OG information</h3>
+    <table>
+      <tr>
+        <th>ProteinCount</th><th>SpeciesCount</th><th>nb_single_copy</th>
+        <th>percent_single_copy</th><th>TargetSpecies_Count</th><th>TargetSpecies_Percentage</th>
+        <th>NumberOfSeq</th>
+      </tr>
+      <tr>
+        <td>263</td><td>252</td><td>259</td>
+        <td>99.23371647509579</td><td>252</td><td>100.0</td>
+        <td>178</td>
+      </tr>
+    </table>
+
+    <h3 class="section-title">Functional Descriptions</h3>
+<p class='subheading'>Functional Category:</p>
+<ul>
+  <li>T: Signal transduction mechanisms</li>
+  <li>K: Transcription</li>
+  <li>J: Translation, ribosomal structure and biogenesis</li>
+  <li>H: Coenzyme transport and metabolism</li>
+</ul>
+<p class='subheading'>GO Molecular Function:</p>
+<ul>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0016740' target='_blank'>GO:0016740</a>: transferase activity</li>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0016874' target='_blank'>GO:0016874</a>: ligase activity</li>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0004829' target='_blank'>GO:0004829</a>: threonine-tRNA ligase activity</li>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0046872' target='_blank'>GO:0046872</a>: metal ion binding</li>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0005524' target='_blank'>GO:0005524</a>: ATP binding</li>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0000166' target='_blank'>GO:0000166</a>: nucleotide binding</li>
+</ul>
+<p class='subheading'>GO Cellular Component:</p>
+<ul>
+  <li>173 genes with <a href='https://www.ebi.ac.uk/QuickGO/GTerm?id=GO:0005737' target='_blank'>GO:0005737</a>: cytoplasm</li>
+</ul>
+<p class='subheading'>InterPro Domains:</p>
+<ul>
+  <li>154 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR012675/' target='_blank'>IPR012675</a>: Beta-grasp domain superfamily</li>
+  <li>154 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR004095/' target='_blank'>IPR004095</a>: TGS</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR006195/' target='_blank'>IPR006195</a>: Aminoacyl-tRNA synthetase, class II</li>
+  <li>167 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR012947/' target='_blank'>IPR012947</a>: Threonyl/alanyl tRNA synthetase, SAD</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR045864/' target='_blank'>IPR045864</a>: Class II Aminoacyl-tRNA synthetase/Biotinyl protein ligase (BPL) and lipoyl protein ligase (LPL)</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR033728/' target='_blank'>IPR033728</a>: Threonine-tRNA ligase catalytic core domain</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR002320/' target='_blank'>IPR002320</a>: Threonine-tRNA ligase, class IIa</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR047246/' target='_blank'>IPR047246</a>: Threonine-tRNA ligase, class IIa, anticodon-binding domain</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR002314/' target='_blank'>IPR002314</a>: Aminoacyl-tRNA synthetase, class II (G/ P/ S/T)</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR036621/' target='_blank'>IPR036621</a>: Anticodon-binding domain superfamily</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR018163/' target='_blank'>IPR018163</a>: Threonyl/alanyl tRNA synthetase, class II-like, putative editing domain superfamily</li>
+  <li>154 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR012676/' target='_blank'>IPR012676</a>: TGS-like</li>
+  <li>174 genes with <a href='http://www.ebi.ac.uk/interpro/entry/InterPro/IPR004154/' target='_blank'>IPR004154</a>: Anticodon-binding</li>
+</ul>
+<p class='subheading'>EC Numbers:</p>
+<ul>
+  <li>177 genes with <a href='https://www.rhea-db.org/rhea?query=ec:6.1.1.3' target='_blank'>6.1.1.3</a>: threonine---tRNA ligase; ATP + L-threonine + tRNAThr = AMP + diphosphate + L-threonyl-tRNAThr</li>
+</ul>
+  </div>
+
+</body>
+</html>

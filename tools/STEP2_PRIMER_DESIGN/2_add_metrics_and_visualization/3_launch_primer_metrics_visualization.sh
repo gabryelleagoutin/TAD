@@ -10,4 +10,4 @@ source $MY_CONDA_PATH
 conda activate TaxonMarker_swarm
 
 
-python 3_primer_metrics_visualization.py -i ../sorted_results_updated.tsv -o primer_metrics_visualization.html
+python primer_metrics_visualization.py -i ../sorted_results_updated.tsv -o primer_metrics_visualization.html

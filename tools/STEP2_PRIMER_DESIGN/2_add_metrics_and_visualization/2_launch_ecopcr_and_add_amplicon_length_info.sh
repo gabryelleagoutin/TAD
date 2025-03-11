@@ -10,4 +10,4 @@ ml devel/Miniconda/Miniconda3
 source $MY_CONDA_PATH
 conda activate TaxonMarker_EcoPCR
 
-python 2_launch_ecopcr_and_add_amplicon_length_info.py ../sorted_results.tsv ecoPCR_db_*
+python ecopcr_and_add_amplicon_length_info.py ../sorted_results.tsv ecoPCR_db_*

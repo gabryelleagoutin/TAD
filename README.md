@@ -14,12 +14,12 @@ In this step, we will select, from the OrthoDB database, orthologous gene groups
 * STEP 2: Primer design 
 During this stage, we align the FASTA sequences to generate pairs of primers. We then select them according to various criteria, such as melting temperature, presence of a GC clamp, etc. We obtain the best possible pairs with a graphical output of their characteristics.
 
-   See the ... for more details and all the stages.
+   See the [STEP2_PRIMER_DESIGN](./tools/STEP2_PRIMER_DESIGN) folder for more details and all the stages.
 
 * STEP 3: In silico validation of primers and amplicons.
 We carry out an in silico PCR to validate our primers, then carry out a discriminatory analysis at species level to check whether the targeted amplicon is sufficiently discriminatory. Finally, for the species detected by the in silico PCR, we recover their known amplicon sequences (e.g. 16S) and apply the same discriminatory treatment to determine whether our new pair of primers performs better.
 
-  See the ... for more details and all the steps involved.
+  See the [STEP3_IN_SILICO_VALIDATION](./tools/STEP3_IN_SILICO_VALIDATION) folder for more details and all the steps involved.
 
 ## Installing TaxonMarker
 
@@ -53,7 +53,8 @@ wget -r -np  --cut-dirs=2  https://data.orthodb.org/v12/download/
 
 ## Launching step 1
 Throughout these steps, examples of commands are illustrated using a test data set available in the ``data_test.`` folder
-=> go to the STEP1_GENES_SELECTION folder
+=> go to the [STEP1_GENES_SELECTION](./tools/STEP1_GENES_SELECTION)  folder
+
 ```
 cd STEP1_GENES_SELECTION
 ```
@@ -93,13 +94,14 @@ We have extracted the 16S rRNA sequences from a database containing the NCBI mic
 
 It is not in the format accepted by EcoPCR. You must format your selection of sequences. Everything is indicated in 
 
-tools/STEP3_IN_SILICO_VALIDATION/2_Amplicon_comparison/```
+```tools/STEP3_IN_SILICO_VALIDATION/2_Amplicon_comparison/```
 
 Important file: 16S_with_taxonomy.tsv 
 This allows me to have the content of the species in all my genomes and to keep this information for future comparisons. You will need it to run certain scripts.
 
 It is stored at the Genotoul cluster in Toulouse.
 Size: 1.5 GB 
+
 ## ncbi tax_dump
 
 This allows us to have the ncbi taxonomy.

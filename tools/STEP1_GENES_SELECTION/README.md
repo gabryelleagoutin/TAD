@@ -1,5 +1,5 @@
 # STEP 1: Gene selection
-**conda: TaxonMarker_main environment**
+**conda environment TaxonMarker_main**
 
 You need to retrieve the file Bacterial_OG.tab, which contains only bacterial ortholog groups from the OrthoDB database and is formatted with one OG per line.
 

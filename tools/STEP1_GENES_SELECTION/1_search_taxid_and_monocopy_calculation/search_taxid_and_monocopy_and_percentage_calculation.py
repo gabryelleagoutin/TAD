@@ -8,6 +8,7 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 import os
 import shutil
+import sys 
 
 __author__ = 'Gabryelle Agoutin - INRAE'
 __copyright__ = 'Copyright (C) 2024 INRAE'
@@ -116,6 +117,25 @@ def filter_matching_lines(input_file_path, search_ID, level2species_path):
     identifiers_with_searchID_in_taxonomy = {id.split('_')[0] for id in identifiers_with_searchID_in_taxonomy}
     return identifiers_with_searchID_in_taxonomy
 
+def filter_matching_lines(input_file_path, search_ID, level2species_path):
+    """
+    Search for the IDs of species that have the desired ID in their taxonomy.
+    """
+    command = f"grep -w {search_ID} {level2species_path} | cut -f2"
+    try:
+        result = subprocess.check_output(command, shell=True, text=True)
+    except subprocess.CalledProcessError:
+        raise ValueError("Your taxonomic identifier is not found in the OrthoDB database. "
+                         "Check it. If it is correct, it may not yet be in the database.")
+
+    if not result.strip():
+        raise ValueError("Your taxonomic identifier is not found in the OrthoDB database. "
+                         "Check it. If it is correct, it may not yet be in the database.")
+
+    identifiers_with_searchID_in_taxonomy = set(result.strip().split('\n'))
+    identifiers_with_searchID_in_taxonomy = {id_.split('_')[0] for id_ in identifiers_with_searchID_in_taxonomy}
+    return identifiers_with_searchID_in_taxonomy
+    
 def map_species(taxids, taxid_to_species):
     """
     Lists the NAMES of the species in the table.
@@ -178,17 +198,29 @@ def main():
     - 'TargetSpecies_Count': Number of target species in the OG\
     - 'TargetSpecies_Percentage': Percentage of target species in the OG""",
        epilog="Exemple: python search_taxid_and_monocopy_calculation.py -i Bacterial_OG.tab -f ../Orthodb/odb11v0_species.tab -s 1578 -l ../Orthodb/odb11v0_level2species.tab -o OG_1578.tab")
-    parser.add_argument("-i", "--input_file", help="file containing all bacterial orthologue groups.is tab-delimited and expected to have the following columns: OG_ID,ProteinID,speciesID")
-    parser.add_argument("-s", "--search_ID", type=int, help="Identifier of the taxonomic rank you are looking for. Example: for Lactobacillus, the identifier is 1568")
+    parser.add_argument("-i", "--input_file", required=True,help="file containing all bacterial orthologue groups.is tab-delimited and expected to have the following columns: OG_ID,ProteinID,speciesID")
+    parser.add_argument("-s", "--search_ID", required=True, help="Identifier of the taxonomic rank you are looking for. Example: for Lactobacillus, the identifier is 1568")
     parser.add_argument('--min_genomes_threshold', type=int, default=1, help='Minimal number of genomes for cog selection')
-    parser.add_argument("-o", '--output_tsv', default='OG_stat_single_copy.tsv', help='Path to the output TSV file')
-    parser.add_argument("-f", '--species_file', help='Path to the species file (e.g., odb11v0_species.tab)')
-    parser.add_argument("-l", '--level2species_file', help='Path to the level2species file (e.g., odb11v0_level2species.tab)', required=True)
+    parser.add_argument("-o", '--output_tsv', required=True,default='OG_stat_single_copy.tsv', help='Path to the output TSV file')
+    parser.add_argument("-f", '--species_file',required=True, help='Path to the species file (e.g., odb11v0_species.tab)')
+    parser.add_argument("-l", '--level2species_file',required=True, help='Path to the level2species file (e.g., odb11v0_level2species.tab)')
     args = parser.parse_args()
 
-    if not args.species_file:
-        parser.error("The species file (-f/--species_file) is required.")
+    if not os.path.isfile(args.level2species_file):
+        parser.error(f"The file ‘{args.level2species_file}’ of the OrthoDB database is not found. "
+                     "Check the path if you have downloaded it correctly.")
 
+    if not os.path.isfile(args.species_file):
+        parser.error(f"The file ‘{args.species_file}’ of the OrthoDB database is not found. "
+                     "Check the path if you have downloaded it correctly.")
+
+    if not os.path.isfile(args.input_file):
+        parser.error(f"The file ‘{args.input_file}’ is not found. Check the path.")
+        
+    if not args.search_ID.isdigit():
+        parser.error("Your identifier contains unrecognised characters. It must contain numbers only.")
+    search_ID = int(args.search_ID)
+    
     with open(args.species_file, 'r') as file:
         odb11v0_species = pd.read_csv(file, delimiter='\t', header=None, names=['NCBI_taxid', 'orthoDB_taxid', 'species', 'genome_id', 'genome_size', 'OG_count', 'coding'])
     taxid_to_species = dict(zip(odb11v0_species['orthoDB_taxid'].str.split('_').str[0], odb11v0_species['species']))
@@ -229,12 +261,16 @@ def main():
         for i in range(chunk_count):
             input_chunk_file = os.path.join(temp_dir, f'chunk_{i}.tsv')
             output_chunk_file = os.path.join(temp_dir, f'chunk_{i}_output.tsv')
-            future = executor.submit(process_file, input_chunk_file, args.search_ID, taxid_to_species, args.min_genomes_threshold, output_chunk_file, args.level2species_file)
+            future = executor.submit(process_file, input_chunk_file, search_ID, taxid_to_species, args.min_genomes_threshold, output_chunk_file, args.level2species_file)
             futures.append(future)
 
         # Wait for all tasks to complete
         for future in futures:
-            future.result()
+            try:
+                future.result()
+            except ValueError as e:
+                print(e)
+                sys.exit(1)  
 
     # Combine the output chunks into the final result
     with open(args.output_tsv, 'w', newline='') as final_output:

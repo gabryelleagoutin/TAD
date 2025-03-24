@@ -28,7 +28,7 @@ We carry out an in silico PCR to validate our primers, then carry out a discrimi
 
 ```
 git clone https://github.com/GTG1988A/TAD.git
-cd TaxonMarker
+cd TAD
 ```
 
 ## Preparing the environment

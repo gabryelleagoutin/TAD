@@ -2,12 +2,12 @@
 
 ## Presentation
 
-TaxonMarker is a tool developed in Python and Bash, designed to identify genetic markers specific to a given taxonomic rank. In metabarcoding sequencing analysis, the 16S rRNA gene is commonly used, although it has limitations, notably its presence in multiple copies and its low resolution at the level of closely related organisms. The aim of TaxonMarker is to select target genes that are potentially more effective than 16S at discriminating between species. As an input, simply provide the desired taxonomic identifier (for example, family ‘Actinomycetes’, taxid: 1760).
+TAD is a tool developed in Python and Bash, designed to identify genetic markers specific to a given taxonomic rank. In metabarcoding sequencing analysis, the 16S rRNA gene is commonly used, although it has limitations, notably its presence in multiple copies and its low resolution at the level of closely related organisms. The aim of TAD is to select target genes that are potentially more effective than 16S at discriminating between species. As an input, simply provide the desired taxonomic identifier (for example, family ‘Actinomycetes’, taxid: 1760).
 
 ![TaxonMarker pipeline:](./TaxonMarker_pipeline.png)
 
 
-**TaxonMarker is divided into 3 pipelines:**
+**TAD is divided into 3 pipelines:**
 
 * STEP 1: Gene selection 
 In this step, we will select, from the OrthoDB database, orthologous gene groups which include a sufficient number of species corresponding to the defined taxonomic rank. We will obtain a fasta for each orthologous group. We also get a summary sheet of all the information we have on the gene. 
@@ -27,7 +27,7 @@ We carry out an in silico PCR to validate our primers, then carry out a discrimi
 ## Installing TaxonMarker
 
 ```
-git clone https://github.com/GTG1988A/TaxonMarker.git
+git clone https://github.com/GTG1988A/TAD.git
 cd TaxonMarker
 ```
 
